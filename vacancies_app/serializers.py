@@ -3,6 +3,8 @@ from rest_framework import serializers
 
 
 class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
+    stack = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Vacancy
         fields = [
@@ -14,7 +16,7 @@ class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
             # 'speciality',
             'experience',
             'grade',
-            # 'link',
+            'stack',
             'date',
         ]
 
