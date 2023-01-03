@@ -2,18 +2,34 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .vacancies_generator import vacancy_generator
 from .models import *
-from rest_framework import viewsets
-from rest_framework import permissions
-from .serializers import VacancySerializer
+# from rest_framework import viewsets
+# from rest_framework import permissions
+from .serializers import VacancyListSerializer, VacancySerializer
+from rest_framework import generics
 
 
-class VacancyViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint to view vacancies list
-    """
+# class VacancyListViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint to view vacancies list
+#     """
+#     queryset = Vacancy.objects.all().order_by('-date')
+#     serializer_class = VacancyListSerializer
+#     # permission_classes = [permissions.IsAuthenticated]
+#
+#
+# class VacancyViewSet(viewsets.ModelViewSet):
+#     queryset = Vacancy.objects.get(id=6)
+#     serializer_class = VacancySerializer
+
+
+class VacancyListViewSet(generics.ListCreateAPIView):
     queryset = Vacancy.objects.all().order_by('-date')
+    serializer_class = VacancyListSerializer
+
+
+class VacancyViewSet(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
-    # permission_classes = [permissions.IsAuthenticated]
 
 
 def fake_db(request, count):
