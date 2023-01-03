@@ -9,6 +9,9 @@ class StackTools(models.Model):
     name = models.CharField(max_length=32)
     category = models.ForeignKey(StackToolsCategory, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Vacancy(models.Model):
     title = models.CharField(max_length=128)
