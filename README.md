@@ -8,7 +8,7 @@ BACKEND<br />
 CLIENT<br />
 
 Папка client содержит React приложение. Для запуска необходимо установить NodeJs.<br />
-ЗАПУСК<br />
+
 1. cd client
 2. npm install
 3. npm start
