@@ -49,40 +49,50 @@ function App() {
   return (
     <Grommet theme={theme} full themeMode={dark ? "dark" : "light"}>
       <Page>
-        <AppBar>
-          <Text className="main-logo-title" size="large" onClick={() => navigate("/")}>
-            Geek Hunter
-          </Text>
-          <Nav direction="row" background="brand" pad="medium">
-            <Anchor
-              onClick={() => navigate("vacancies")}
-              label="Vacancies"
-              color="defaultText"
-            />
-          </Nav>
-          <Button
-            a11yTitle={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            icon={dark ? <Moon /> : <Sun />}
-            onClick={() => setDark(!dark)}
-            tip={{
-              content: (
-                <Box
-                  pad="small"
-                  round="small"
-                  background={dark ? "dark-3" : "light-3"}
-                >
-                  {dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                </Box>
-              ),
-              plain: true,
-            }}
-          />
-        </AppBar>
-        <AppRouter></AppRouter>
-        <Footer classNema="footer" background="brand" pad="medium">
-          <Text>Copyright</Text>
-          <Anchor label="About" color="defaultText" />
-        </Footer>
+        <section className="wrapper">
+          <header className="wrapper__header">
+            <AppBar>
+              <Text className="main-logo-title" size="large" onClick={() => navigate("/")}>
+                Geek Hunter
+              </Text>
+              <Nav direction="row" background="brand" pad="medium">
+                <Anchor
+                  onClick={() => navigate("vacancies")}
+                  label="Vacancies"
+                  color="defaultText"
+                />
+              </Nav>
+              <Button
+                a11yTitle={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                icon={dark ? <Moon /> : <Sun />}
+                onClick={() => setDark(!dark)}
+                tip={{
+                  content: (
+                    <Box
+                      pad="small"
+                      round="small"
+                      background={dark ? "dark-3" : "light-3"}
+                    >
+                      {dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                    </Box>
+                  ),
+                  plain: true,
+                }}
+              />
+            </AppBar>
+          </header>
+
+          <main className="wrapper__content">
+            <AppRouter></AppRouter>
+          </main>
+          
+          <footer className="wrapper__footer">
+            <Footer background="brand" pad="medium">
+              <Text>Copyright</Text>
+              <Anchor label="About" color="defaultText" />
+            </Footer>
+          </footer>
+        </section>
       </Page>
     </Grommet>
   );

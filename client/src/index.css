@@ -1,12 +1,33 @@
+/* GENERAL STRUCTURE */
+
+.wrapper {
+  position: relative;
+  min-height: 100vh;
+}
+
+.wrapper__header {
+
+}
+
+.wrapper__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper__footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+/* HEADER */
 .main-logo-title {
   cursor: pointer;
 }
 
+/* VACANCY_DATA */
+
 .vacancy-card {
-  margin-bottom: 1em;
+  margin-bottom: 1.5rem;
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-}

@@ -1,10 +1,10 @@
 import { React, useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
-import { Anchor, PageContent, Card, CardHeader, CardBody, CardFooter, Tag, Text, List } from 'grommet';
+import { Anchor, PageContent, Card, CardHeader, CardBody, CardFooter, Tag, Text } from 'grommet';
 import axios from "axios";
 
 
-const VacancyData = () => {
+const VacancyDataPage = () => {
   const params = useParams();
   const [vacancyData, setVacancyData] = useState([]);
 
@@ -19,7 +19,7 @@ const VacancyData = () => {
     }
 
     fetchData();
-  }, []);
+  }, [params.id]);
 
   return (
     <PageContent>
@@ -73,9 +73,7 @@ const VacancyData = () => {
             : ''
           }
           
-        
         </CardBody>
-
 
         <CardFooter pad={{horizontal: "small"}} background="light-2">
 
@@ -85,4 +83,4 @@ const VacancyData = () => {
   )
 }
 
-export default VacancyData
+export default VacancyDataPage
