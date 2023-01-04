@@ -1,6 +1,5 @@
 import { React, useContext } from 'react';
 import {  
-  Box,
   Button,
   Card,
   CardHeader,
@@ -10,11 +9,13 @@ import {
   Heading,
   Paragraph,
 } from 'grommet';
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 
 const VacancyCard = (props) => {
   const size = useContext(ResponsiveContext);
-
+  const navigate = useNavigate();
+  
   return (
     <Card className='vacancy-card'>
       <CardHeader pad="medium">
@@ -31,13 +32,7 @@ const VacancyCard = (props) => {
         </Paragraph>
       </CardBody>
       <CardFooter pad="medium" background="background-contrast">
-        <Button
-          primary
-          label="Go to vacancy"
-          active
-          onClick={() => {}}
-          {...props}
-        />
+        <Button primary label="label" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>
       </CardFooter>
     </Card>
   );
