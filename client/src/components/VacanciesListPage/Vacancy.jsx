@@ -10,6 +10,7 @@ import {
   Heading,
   Paragraph,
 } from 'grommet';
+import { Link } from "react-router-dom";
 
 const VacancyCard = (props) => {
   const size = useContext(ResponsiveContext);

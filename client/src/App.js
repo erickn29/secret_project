@@ -1,8 +1,6 @@
-import { useState, useEffect, useContext } from "react";
-import Vacancies from "./components/VacanciesList/Vacancies";
-
-import axios from "axios";
+import { useState } from "react";
 import {
+  Anchor,
   Box,
   Button,
   Card,
@@ -20,9 +18,15 @@ import {
   Paragraph,
   ResponsiveContext,
   Text,
+  Nav,
+  Footer,
 } from "grommet";
 import { Moon, Sun } from "grommet-icons";
 import { deepMerge } from "grommet/utils";
+import AppRouter from "./components/AppRouter";
+import { Link } from "react-router-dom";
+
+
 // require('dotenv').config();
 
 const theme = deepMerge(grommet, {
@@ -49,25 +53,16 @@ const AppBar = (props) => (
 
 function App() {
   const [dark, setDark] = useState(false);
-  const [vacancies, setVacancies] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const allVacanciesURL = `http://localhost:8000/vacancies`;
-      let response = await axios.get(allVacanciesURL);
-
-      let vacancyList = response.data.results;
-      setVacancies(vacancyList);
-    }
-
-    fetchData();
-  }, []);
 
   return (
     <Grommet theme={theme} full themeMode={dark ? "dark" : "light"}>
       <Page>
         <AppBar>
           <Text size="large">Geek Hunter</Text>
+          <Nav direction="row" background="brand" pad="medium">
+            <Link to="/">Main page</Link>
+            <Link to="vacancies">Vacancies</Link>
+          </Nav>
           <Button
             a11yTitle={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             icon={dark ? <Moon /> : <Sun />}
@@ -86,13 +81,12 @@ function App() {
             }}
           />
         </AppBar>
-        <PageContent>
-          <PageHeader title="Vacancies" />
-          <Grid gap="large" pad={{ bottom: "large" }}>
-            <Vacancies vacancies={vacancies}></Vacancies>
-          </Grid>
-        </PageContent>
+        <AppRouter></AppRouter>
       </Page>
+      <Footer classNema='footer' background="brand" pad="medium">
+          <Text>Copyright</Text>
+          <Anchor label="About" />
+        </Footer>
     </Grommet>
   );
 }
