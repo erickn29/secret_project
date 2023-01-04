@@ -15,6 +15,7 @@ import { Moon, Sun } from "grommet-icons";
 import { deepMerge } from "grommet/utils";
 import AppRouter from "./components/AppRouter";
 import { useNavigate } from "react-router-dom";
+import { Github, Youtube, Reactjs } from 'grommet-icons';
 
 // require('dotenv').config();
 
@@ -23,6 +24,7 @@ const theme = deepMerge(grommet, {
     colors: {
       brand: "#7D4CDB",
       defaultText: "#F8F8F8",
+      grey: "#33333310",
     },
     font: {
       family: "Roboto",
@@ -67,12 +69,12 @@ function App() {
                 <Nav direction="row" background="brand" pad="medium">
                   <Anchor
                     onClick={() => navigate("vacancies")}
-                    label="Vacancies"
+                    label="Вакансии"
                     color="defaultText"
                   />
                   <Anchor
                     onClick={() => navigate("login")}
-                    label="Login"
+                    label="Войти"
                     color="defaultText"
                   />
                 </Nav>
@@ -105,7 +107,11 @@ function App() {
 
           <footer className="wrapper__footer">
             <Footer background="brand" pad="medium">
-              <Text>Copyright</Text>
+            <Reactjs color='defaultText' />
+              <div className="footer__icons">
+                <Anchor href="https://github.com/erickn29/secret_project" target="_blank" icon={<Github color='defaultText' />} hoverIndicator />
+                <Anchor href="https://www.youtube.com/" target="_blank" icon={<Youtube color='defaultText' />} hoverIndicator />
+              </div>
               <Anchor label="About" color="defaultText" />
             </Footer>
           </footer>

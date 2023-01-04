@@ -37,14 +37,22 @@ const VacancyDataPage = () => {
         </CardHeader>
         
         {/* Данные вакансии */}
-        <CardBody pad="medium">
+        <CardBody className="vacancy-card-full__body" pad="medium">
 
+          {/* Стек */}
+          <div className="vacancy-card-full__stack">
+          {
+            vacancyData.stack 
+            ? vacancyData.stack.map((stackItem) => <Tag key={stackItem} value={stackItem} />)
+            : ''
+          }
+          </div>
 
-
-
-          <Tag name="Специальность" value={vacancyData.speciality} />
-          <Tag name="Опыт" value={vacancyData.experience} />
-          <Tag name="Grade?" value={vacancyData.grade} />
+          <div className="vacancy-card-full__requirements">
+            <Tag name="Специализация" value={vacancyData.speciality} />
+            <Tag name="Опыт" value={vacancyData.experience} />
+            <Tag name="Grade?" value={vacancyData.grade} />
+          </div>
 
           {/* Компания вакансии */}
           {
@@ -54,28 +62,25 @@ const VacancyDataPage = () => {
           }
 
           {/* Описание вакансии */}
-          <Text>{vacancyData.text}</Text>
+          <div className="vacancy-card-full__description">
+            <Text>{vacancyData.text}</Text>
+          </div>
 
           {/* Диапазон зарплат */}
+          <div className="vacancy-card-full__salary">
           {(vacancyData.salary_from && vacancyData.salary_to)
             ? <Text>Зарплата: {vacancyData.salary_from} - {vacancyData.salary_to}</Text>
             : (vacancyData.salary_from 
               ? <Text>Зарплата: {vacancyData.salary_from}</Text> : (vacancyData.salary_to 
                 ? <Text>Зарплата: {vacancyData.salary_to}</Text> : <Text>Зарплата не указана</Text>))
           }
+          </div>
 
           {/* Ссылка на вакансию */}
           {
             vacancyData.link ? <Anchor href={vacancyData.link}></Anchor> : ''
           }
             
-          {/* Стек */}
-          {
-            vacancyData.stack 
-            ? vacancyData.stack.map((stackItem) => <Tag key={stackItem} value={stackItem} />)
-            : ''
-          }
-          
         </CardBody>
 
         <CardFooter pad={{horizontal: "small"}} background="light-2">

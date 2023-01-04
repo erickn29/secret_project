@@ -1,6 +1,5 @@
 import { React, useContext, useState } from 'react';
 import {  
-  Anchor,
   Box,
   Button,
   Card,
@@ -43,6 +42,7 @@ const VacancyCard = (props) => {
         
         <Box direction="row" align="center" gap="small">
           <Button primary label="Перейти к вакансии" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>
+          <Button icon={<ShareOption color="plain" />} hoverIndicator />
           <Button
             icon={<Favorite color={favorite ? 'red' : undefined} />}
             hoverIndicator
@@ -50,7 +50,6 @@ const VacancyCard = (props) => {
               setFavorite(!favorite);
             }}
           />
-          <Button icon={<ShareOption color="plain" />} hoverIndicator />
         </Box>
       </CardFooter>
     </Card>
