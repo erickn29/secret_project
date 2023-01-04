@@ -15,14 +15,15 @@ import { Moon, Sun } from "grommet-icons";
 import { deepMerge } from "grommet/utils";
 import AppRouter from "./components/AppRouter";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 // require('dotenv').config();
 
 const theme = deepMerge(grommet, {
   global: {
     colors: {
-      brand: "#228BE6",
+      brand: "#7D4CDB",
+      defaultText: "#F8F8F8",
     },
     font: {
       family: "Roboto",
@@ -43,15 +44,21 @@ const AppBar = (props) => (
 
 function App() {
   const [dark, setDark] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Grommet theme={theme} full themeMode={dark ? "dark" : "light"}>
       <Page>
         <AppBar>
-          <Text size="large">Geek Hunter</Text>
+          <Text className="main-logo-title" size="large" onClick={() => navigate("/")}>
+            Geek Hunter
+          </Text>
           <Nav direction="row" background="brand" pad="medium">
-            <Link to="/">Main page</Link>
-            <Link to="vacancies">Vacancies</Link>
+            <Anchor
+              onClick={() => navigate("vacancies")}
+              label="Vacancies"
+              color="defaultText"
+            />
           </Nav>
           <Button
             a11yTitle={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
@@ -72,11 +79,11 @@ function App() {
           />
         </AppBar>
         <AppRouter></AppRouter>
-      </Page>
-      <Footer classNema='footer' background="brand" pad="medium">
+        <Footer classNema="footer" background="brand" pad="medium">
           <Text>Copyright</Text>
-          <Anchor label="About" />
+          <Anchor label="About" color="defaultText" />
         </Footer>
+      </Page>
     </Grommet>
   );
 }
