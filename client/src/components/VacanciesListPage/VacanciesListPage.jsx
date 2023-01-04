@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
-import { Box, PageContent, PageHeader, Grid, Spinner, Pagination } from "grommet";
+import { Box, PageContent, PageHeader, Grid, Pagination } from "grommet";
 import Vacancies from "./Vacancies";
+import VacancyListFilter from "../Filters/VacancyListFilter";
 import axios from "axios";
 
 const VacanciesListPage = () => {
@@ -32,7 +33,8 @@ const VacanciesListPage = () => {
 
   return (
     <PageContent>
-      <PageHeader title="Vacancies" />
+      <PageHeader alignSelf="center" title="Список вакансий" />
+      <VacancyListFilter></VacancyListFilter>
       <Grid gap="large" pad={{ bottom: "large" }}>
         {isLoading 
         ? <Vacancies isLoading={true}></Vacancies>

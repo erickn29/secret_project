@@ -8,7 +8,7 @@ import {
   ResponsiveContext,
   Heading,
   Paragraph,
-  Skeleton
+  Skeleton,
 } from 'grommet';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ const VacancyCard = (props) => {
       }
       </CardBody>
       <CardFooter pad="medium" background="background-contrast">
-        <Button primary label="label" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>
+        <Button primary label="Перейти к вакансии" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>
       </CardFooter>
     </Card>
   );

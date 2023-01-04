@@ -14,7 +14,6 @@ import {
 import { Moon, Sun } from "grommet-icons";
 import { deepMerge } from "grommet/utils";
 import AppRouter from "./components/AppRouter";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 // require('dotenv').config();
@@ -52,40 +51,58 @@ function App() {
         <section className="wrapper">
           <header className="wrapper__header">
             <AppBar>
-              <Text className="main-logo-title" size="large" onClick={() => navigate("/")}>
-                Geek Hunter
-              </Text>
-              <Nav direction="row" background="brand" pad="medium">
-                <Anchor
-                  onClick={() => navigate("vacancies")}
-                  label="Vacancies"
-                  color="defaultText"
+              <div className="appbar__left">
+                <Text
+                  className="main-logo-title"
+                  size="large"
+                  onClick={() => navigate("/")}
+                >
+                  Geek Hunter
+                </Text>
+              </div>
+              <div
+                style={{ display: "flex", flexDirection: "row" }}
+                className="appbar_right"
+              >
+                <Nav direction="row" background="brand" pad="medium">
+                  <Anchor
+                    onClick={() => navigate("vacancies")}
+                    label="Vacancies"
+                    color="defaultText"
+                  />
+                  <Anchor
+                    onClick={() => navigate("login")}
+                    label="Login"
+                    color="defaultText"
+                  />
+                </Nav>
+                <Button
+                  a11yTitle={
+                    dark ? "Switch to Light Mode" : "Switch to Dark Mode"
+                  }
+                  icon={dark ? <Moon /> : <Sun />}
+                  onClick={() => setDark(!dark)}
+                  tip={{
+                    content: (
+                      <Box
+                        pad="small"
+                        round="small"
+                        background={dark ? "dark-3" : "light-3"}
+                      >
+                        {dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                      </Box>
+                    ),
+                    plain: true,
+                  }}
                 />
-              </Nav>
-              <Button
-                a11yTitle={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                icon={dark ? <Moon /> : <Sun />}
-                onClick={() => setDark(!dark)}
-                tip={{
-                  content: (
-                    <Box
-                      pad="small"
-                      round="small"
-                      background={dark ? "dark-3" : "light-3"}
-                    >
-                      {dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                    </Box>
-                  ),
-                  plain: true,
-                }}
-              />
+              </div>
             </AppBar>
           </header>
 
           <main className="wrapper__content">
             <AppRouter></AppRouter>
           </main>
-          
+
           <footer className="wrapper__footer">
             <Footer background="brand" pad="medium">
               <Text>Copyright</Text>
