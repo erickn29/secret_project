@@ -1,9 +1,10 @@
-from .models import Vacancy, StackTools
+from .models import *
 from rest_framework import serializers
 
 
 class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
     stack = serializers.StringRelatedField(many=True)
+    company = serializers.StringRelatedField(many=False)
 
     class Meta:
         model = Vacancy
@@ -17,6 +18,7 @@ class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
             'experience',
             'grade',
             'stack',
+            'company',
             'date',
         ]
 
@@ -27,8 +29,15 @@ class StackSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['name', ]
 
 
+class CompanySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['name', 'country', 'city']
+
+
 class VacancySerializer(serializers.HyperlinkedModelSerializer):
     stack = serializers.StringRelatedField(many=True)
+    company = serializers.StringRelatedField(many=False)
 
     class Meta:
         model = Vacancy
@@ -43,6 +52,7 @@ class VacancySerializer(serializers.HyperlinkedModelSerializer):
             'grade',
             'link',
             'stack',
+            'company',
             'date',
         ]
 

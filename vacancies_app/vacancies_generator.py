@@ -1,6 +1,6 @@
 import random
 
-title = ['программист', 'разработчик', 'компьтерщик']
+title = ['программист', 'разработчик', 'компьютерщик']
 text = 'Тут будет описание вакансии...'
 language = ['Python', 'C#', 'JavaScript', 'Java', 'C++', 'Kotlin', 'PHP']
 stack = ['git', 'docker', 'drf', 'react', 'fastAPI', '.Net core', 'Postrgesql', 'MySQL']

@@ -35,6 +35,11 @@ class VacancyViewSet(generics.RetrieveUpdateDestroyAPIView):
 def fake_db(request, count):
     vacancies = vacancy_generator(count)
     for vacancy in vacancies:
+        company_obj = Company.objects.get_or_create(
+            name='МИАЦ',
+            country='Россия',
+            city='Архангельск',
+        )[0]
         vacancy_obj = Vacancy.objects.get_or_create(
             title=vacancy.get('title'),
             text=vacancy.get('text'),
@@ -43,6 +48,7 @@ def fake_db(request, count):
             speciality=vacancy.get('speciality'),
             experience=vacancy.get('experience'),
             grade=vacancy.get('grade'),
+            company=company_obj,
         )[0]
         vacancy_obj.save()
         for stack in vacancy['stack'].split(','):
