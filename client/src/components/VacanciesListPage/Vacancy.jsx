@@ -8,6 +8,7 @@ import {
   ResponsiveContext,
   Heading,
   Paragraph,
+  Skeleton
 } from 'grommet';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,16 +21,19 @@ const VacancyCard = (props) => {
     <Card className='vacancy-card'>
       <CardHeader pad="medium">
         <Heading level={2} margin="none">
-          {props.title}
+          {
+            props.isMock
+            ? <Skeleton />
+            : props.title
+          }
         </Heading>
       </CardHeader>
       <CardBody pad="medium">
-        <Paragraph maxLines={size === "small" ? 3 : undefined}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
-          porttitor non nulla ac vehicula. Aliquam erat volutpat. Mauris auctor
-          faucibus est at mattis. Aliquam a enim ac nisi aliquam consectetur et
-          ac velit. Mauris ut imperdiet libero.
-        </Paragraph>
+      {
+        props.isMock
+        ? <Skeleton />
+        : <Paragraph maxLines={size === "small" ? 3 : undefined}>Опыт: {props.experience ? props.experience : "Не указано"}<br/>Грейд: {props.grade ? props.grade : "Не указано"}<br/>Компания: {props.company ? props.company : "Не указано"}</Paragraph>
+      }
       </CardBody>
       <CardFooter pad="medium" background="background-contrast">
         <Button primary label="label" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>

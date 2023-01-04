@@ -1,9 +1,20 @@
 import React from 'react';
 import VacancyCard from './Vacancy';
-import { Routes, Route } from 'react-router-dom';
 
-const Vacancies = ({vacancies}) => {
-  const vacanciesList = vacancies.map((vacancy) => <VacancyCard key={vacancy.id} {...vacancy}></VacancyCard>)
+const Vacancies = (props) => {
+  const generateVacanciesMock = () => {
+    let result = [];
+    for (let i = 0; i < 10; i++) {
+      result.push(<VacancyCard key={i} isMock={true}></VacancyCard>);
+    }
+
+    return result;
+  }
+
+  let vacanciesList
+  props.isLoading
+  ? vacanciesList = generateVacanciesMock()
+  : vacanciesList = props.vacancies.map((vacancy) => <VacancyCard key={vacancy.id} {...vacancy}></VacancyCard>)
 
   return (
     <section className="vacancies">

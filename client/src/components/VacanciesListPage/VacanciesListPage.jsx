@@ -1,36 +1,45 @@
 import { React, useState, useEffect } from "react";
-import { PageContent, PageHeader, Grid, Spinner } from "grommet";
+import { Box, PageContent, PageHeader, Grid, Spinner, Pagination } from "grommet";
 import Vacancies from "./Vacancies";
 import axios from "axios";
 
 const VacanciesListPage = () => {
   const [vacancies, setVacancies] = useState([]);
+  const [vacanciesCount, setVacanciesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  async function fetchData(currentPage) {
+    const allVacanciesURL = `http://localhost:8000/vacancies?page=${currentPage}`;
+    
+    setIsLoading(true);
+    let response = await axios.get(allVacanciesURL);
+
+    let vacancyList = response.data.results;
+    let vacancyCount = response.data.count;
+    setVacancies(vacancyList);
+    setVacanciesCount(vacancyCount);
+    setIsLoading(false);
+  }
+  
   useEffect(() => {
-    async function fetchData() {
-      const allVacanciesURL = `http://localhost:8000/vacancies`;
-      
-      setIsLoading(true);
-      let response = await axios.get(allVacanciesURL);
+    fetchData(currentPage);
+  }, [currentPage]);
 
-      let vacancyList = response.data.results;
-      setVacancies(vacancyList);
-
-      setIsLoading(false);
-    }
-
-    fetchData();
-  }, []);
+  const handleListChange = ({page, startIndex, endIndex}) => {
+    setCurrentPage(page);
+  }
 
   return (
-    <PageContent className="page">
+    <PageContent>
       <PageHeader title="Vacancies" />
       <Grid gap="large" pad={{ bottom: "large" }}>
         {isLoading 
-        ? <Spinner />
-        : <Vacancies vacancies={vacancies}></Vacancies>
+        ? <Vacancies isLoading={true}></Vacancies>
+        : <Vacancies isLoading={false} vacancies={vacancies}></Vacancies>
         }
+
+      <Box justify="center" align="center"> <Pagination page={currentPage} numberItems={vacanciesCount} onChange={handleListChange} /> </Box>
       </Grid>
     </PageContent>
   );

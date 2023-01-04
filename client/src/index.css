@@ -12,6 +12,7 @@
 .wrapper__content {
   display: flex;
   flex-direction: column;
+  margin-bottom: 5rem;
 }
 
 .wrapper__footer {
@@ -29,5 +30,9 @@
 
 .vacancy-card {
   margin-bottom: 1.5rem;
+  width: 100%;
+  /* !important плохо, ну а что еще делать, когда нужно переопределить вшитые стили ui библиотеки */
+  min-height: 300px !important;
+  height: 30vh;
 }
 
