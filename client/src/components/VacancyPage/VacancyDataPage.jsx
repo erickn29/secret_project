@@ -1,6 +1,6 @@
 import { React, useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
-import { Anchor, PageContent, Card, CardHeader, CardBody, CardFooter, Tag, Text } from 'grommet';
+import { Anchor, PageContent, Card, CardHeader, CardBody, CardFooter, Tag, Text, Heading } from 'grommet';
 import axios from "axios";
 
 
@@ -23,21 +23,24 @@ const VacancyDataPage = () => {
 
   return (
     <PageContent>
-      <Card background="light-1">
+      <Card className="vacancy-card-full" background="light-1">
 
         {/* Название вакансии */}
-        <CardHeader pad="medium">{vacancyData.title}</CardHeader>
-        
-        {/* Данные вакансии */}
-        <CardBody pad="medium">
-
-
+        <CardHeader className="vacancy-card-full__header" pad="medium">
+          <Heading margin="none">{vacancyData.title}</Heading>
           {/* Дата размещения */}
           {
             vacancyData.date
             ? <Text>Дата размещения: {vacancyData.date}</Text>
             : ''
           }
+        </CardHeader>
+        
+        {/* Данные вакансии */}
+        <CardBody pad="medium">
+
+
+
 
           <Tag name="Специальность" value={vacancyData.speciality} />
           <Tag name="Опыт" value={vacancyData.experience} />

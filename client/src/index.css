@@ -39,8 +39,6 @@
   margin-bottom: 1rem !important;
 }
 
-/* VACANCY_DATA */
-
 .vacancy-card {
   margin-bottom: 1.5rem;
   width: 100%;
@@ -49,3 +47,8 @@
   height: 30vh;
 }
 
+/* VACANCY_DATA */
+
+.vacancy-card-full {
+  margin-top: 2rem;
+}

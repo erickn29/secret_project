@@ -1,5 +1,7 @@
-import { React, useContext } from 'react';
+import { React, useContext, useState } from 'react';
 import {  
+  Anchor,
+  Box,
   Button,
   Card,
   CardHeader,
@@ -11,11 +13,13 @@ import {
   Skeleton,
 } from 'grommet';
 import { useNavigate } from 'react-router-dom';
+import { Favorite, ShareOption } from 'grommet-icons';
 
 
 const VacancyCard = (props) => {
   const size = useContext(ResponsiveContext);
   const navigate = useNavigate();
+  const [favorite, setFavorite] = useState(false);
   
   return (
     <Card className='vacancy-card'>
@@ -36,7 +40,18 @@ const VacancyCard = (props) => {
       }
       </CardBody>
       <CardFooter pad="medium" background="background-contrast">
-        <Button primary label="Перейти к вакансии" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>
+        
+        <Box direction="row" align="center" gap="small">
+          <Button primary label="Перейти к вакансии" onClick={() => navigate(`/vacancies/vacancy/${props.id}`)}/>
+          <Button
+            icon={<Favorite color={favorite ? 'red' : undefined} />}
+            hoverIndicator
+            onClick={() => {
+              setFavorite(!favorite);
+            }}
+          />
+          <Button icon={<ShareOption color="plain" />} hoverIndicator />
+        </Box>
       </CardFooter>
     </Card>
   );
