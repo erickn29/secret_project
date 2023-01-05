@@ -6,7 +6,7 @@ language = ['Python', 'C#', 'JavaScript', 'Java', 'C++', 'Kotlin', 'PHP']
 stack = ['git', 'docker', 'drf', 'react', 'fastAPI', '.Net core', 'Postrgesql', 'MySQL']
 grade = ['trainee', 'junior', 'middle', 'senior', 'lead']
 speciality = ['разработчик', 'дата-сайентист', 'DevOps']
-experience = ['нет опыта', 'от 0.5 года', 'от 1 года', 'от 3 лет', 'более 5 лет']
+experience = ['нет опыта', 'от 1 года', 'от 3 лет', 'более 5 лет']
 
 
 def vacancy_generator(count: int) -> list:
