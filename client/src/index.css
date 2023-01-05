@@ -1,0 +1,120 @@
+/* GENERAL STRUCTURE */
+
+.wrapper {
+  position: relative;
+  min-height: 100vh;
+}
+
+.wrapper__header {
+
+}
+
+.wrapper__content {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5rem;
+}
+
+.wrapper__footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+/* HEADER */
+.main-logo-title {
+  cursor: pointer;
+}
+
+/* MAIN_PAGE */
+.main-content__carousel {
+  margin-top: 4rem;
+}
+
+.main-content__description {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.main-content__description > * {
+  padding: 4rem;
+  color: white;
+  background-color: #7e4cdb96;
+  border-radius: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* VACANCY_LIST */
+.vacancy-list-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.vacancy-list-filter > * {
+  width: 100%;
+  margin-bottom: 1rem !important;
+}
+
+.vacancy-card {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  /* !important плохо, ну а что еще делать, когда нужно переопределить вшитые стили ui библиотеки */
+  min-height: 300px !important;
+  height: 30vh;
+}
+
+/* VACANCY_DATA */
+
+.vacancy-card-full {
+  margin-top: 2rem;
+}
+
+.vacancy-card-full__header {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.vacancy-card-full__header > *{
+  display: inline-block;
+  margin-bottom: 1rem !important;
+}
+
+.vacancy-card-full__stack {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.vacancy-card-full__stack > * {
+  width: auto;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vacancy-card-full__requirements {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.vacancy-card-full__requirements > * {
+  width: auto;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vacancy-card-full__description {
+  margin-bottom: 1rem;
+}
+
+.vacancy-card-full__salary {
+
+}
