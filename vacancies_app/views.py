@@ -1,11 +1,18 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+import json
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404
 from .vacancies_generator import vacancy_generator
 from .models import *
 # from rest_framework import viewsets
 # from rest_framework import permissions
 from .serializers import VacancyListSerializer, VacancySerializer
 from rest_framework import generics
+from parsers_app.hh_parser import HhParser
+from parsers_app.base_parser import BaseParser
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 # class VacancyListViewSet(viewsets.ModelViewSet):
@@ -54,8 +61,17 @@ def fake_db(request, count):
         for stack in vacancy['stack'].split(','):
             stack_obj = StackTools.objects.get_or_create(
                 name=stack,
-                category=StackToolsCategory.objects.get_or_create(name='категория')[0],
             )[0]
             stack_obj.save()
             vacancy_obj.stack.add(stack_obj)
     return HttpResponse('DONE!')
+
+
+def get_hh_vacancies(request, parser_token):
+    if parser_token == os.getenv('PARSER_TOKEN'):
+        obj = HhParser(BaseParser.HH_LINK)
+        vacancies = obj.get_vacancies()
+        obj.vacancies_to_db(vacancies)
+        return HttpResponse(str(vacancies))
+    else:
+        raise Http404

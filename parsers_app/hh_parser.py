@@ -1,5 +1,6 @@
 import datetime
-from base_parser import BaseParser
+from .base_parser import BaseParser
+from .analyzer import Analyzer
 from requests import request
 from bs4 import BeautifulSoup as bs
 import re
@@ -15,7 +16,6 @@ class HhParser(BaseParser):
     @staticmethod
     def _get_num_pages(text: str) -> str:
         """Получаем количество страниц с вакансиями"""
-        print('Получаем количество страниц с вакансиями')
         time.sleep(1)
         page_elements_list = re.findall(r'pager-page-wrapper-\d+-\d+', text)
         if page_elements_list:
@@ -77,7 +77,7 @@ class HhParser(BaseParser):
             print(e)
             return
 
-    def _get_vacancy_data(self, page: str):
+    def _get_vacancy_data(self, page: str, link: str):
         """Получаем информацию по вакансии"""
         soup = bs(page, 'html.parser')
         try:
@@ -90,6 +90,7 @@ class HhParser(BaseParser):
             stack = None
             company = None
             company_address = None
+            is_remote = False
             if 'руб' in salary:
                 if 'от' in salary and 'до' not in salary:
                     salary_from = int(''.join([i for i in salary if i.isdigit()]))
@@ -106,10 +107,10 @@ class HhParser(BaseParser):
                     salary_to = int(''.join([i for i in salary if i.isdigit()])) * 75
                 if 'от' in salary and 'до' in salary:
                     salary_list = salary.split('до')
-                    salary_from = int(''.join([i for i in salary_list[0] if i.isdigit()]))
-                    salary_to = int(''.join([i for i in salary_list[1] if i.isdigit()]))
+                    salary_from = int(''.join([i for i in salary_list[0] if i.isdigit()])) * 75
+                    salary_to = int(''.join([i for i in salary_list[1] if i.isdigit()])) * 75
             if soup.find('span', {'data-qa': "vacancy-experience"}):
-                experience = self.string_cleaner(soup.find('span', {'data-qa': "vacancy-experience"}).text)
+                experience = Analyzer.get_experience(self.string_cleaner(soup.find('span', {'data-qa': "vacancy-experience"}).text))
             if soup.find('div', {'class': "vacancy-section"}):
                 text = self.string_cleaner(soup.find('div', {'class': "vacancy-section"}).text)
             if soup.find('div', {'class': "bloko-tag-list"}):
@@ -119,47 +120,42 @@ class HhParser(BaseParser):
                 company = self.string_cleaner(soup.find('div', {'class': "vacancy-company-details"}).text)
             if soup.find('span', {'data-qa': "vacancy-view-raw-address"}):
                 company_address = self.string_cleaner(soup.find('span', {'data-qa': "vacancy-view-raw-address"}).text)
+            if soup.find('p', {'data-qa': "vacancy-view-employment-mode"}):
+                if 'удаленная работа' in self.string_cleaner(soup.find('p', {'data-qa': "vacancy-view-employment-mode"}).text).lower():
+                    is_remote = True
             vacancy = {}
-            grade = self.get_grade(title, text)
+            grade = Analyzer.get_grade(title, text)
             vacancy.update({
                 'title': title,
                 'salary_from': salary_from,
                 'salary_to': salary_to,
+                'is_remote': is_remote,
                 'experience': experience,
                 'grade': grade,
                 'text': text,
                 'stack': stack,
                 'company': company,
                 'company_address': company_address,
-                'date': datetime.datetime.now().strftime('%Y-%m-%d')
+                'date': datetime.datetime.now().strftime('%Y-%m-%d'),
+                'link': link
             })
             time.sleep(1)
             return vacancy
         except Exception as e:
             print(e)
 
-    def get_vacancies(self) -> dict:
+    def get_vacancies(self, wright_to_file: bool = True) -> dict:
         vacancy_dict = {'vacancies': []}
         html = self._get_vacancies_list_html()
         pages_list = self._get_pages(html)
         links = self._get_vacancies_links(pages_list)
         for link in tqdm(links):
             vacancy_page = self._get_vacancy_page(link)
-            vacancy_data = self._get_vacancy_data(vacancy_page)
+            vacancy_data = self._get_vacancy_data(vacancy_page, link)
             vacancy_dict['vacancies'].append(vacancy_data)
             time.sleep(random.randint(2, 5))
+        if wright_to_file:
+            with open(f'vacancies_hh_{datetime.datetime.now().strftime("%d_%m_%Y")}.json', 'w', encoding='utf-8') as f:
+                f.write(json.dumps(vacancy_dict))
         return vacancy_dict
 
-    def vacancies_to_db(self):
-
-
-
-# obj = HhParser(BaseParser.HH_LINK)
-# with open(f'vacancies_hh_{datetime.datetime.now().strftime("%d_%m_%Y")}.json', 'w', encoding='utf-8') as f:
-#     f.write(json.dumps(obj.get_vacancies()))
-#
-#
-# with open('vacancies_hh_05_01_2023.json', 'r', encoding='utf-8') as f:
-#     jsn = json.loads(f.read())
-# for v in jsn['vacancies']:
-#     print(v)
