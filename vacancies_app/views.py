@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from .vacancies_generator import vacancy_generator
@@ -11,8 +12,10 @@ from parsers_app.hh_parser import HhParser
 from parsers_app.base_parser import BaseParser
 from dotenv import load_dotenv
 import os
+from miac_logger.logger import BaseLogger
 
 load_dotenv()
+logger = BaseLogger(current_file=Path(__file__).name)
 
 
 # class VacancyListViewSet(viewsets.ModelViewSet):
@@ -30,6 +33,8 @@ load_dotenv()
 
 
 class VacancyListViewSet(generics.ListCreateAPIView):
+    # print(Path(__file__).name)
+    logger.error('error')
     queryset = Vacancy.objects.all().order_by('-date')
     serializer_class = VacancyListSerializer
 
