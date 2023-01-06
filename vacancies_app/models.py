@@ -4,10 +4,20 @@ from django.db import models
 class StackToolsCategory(models.Model):
     name = models.CharField(max_length=128)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', ], name='unique_stack_item')
+        ]
+
 
 class StackTools(models.Model):
     name = models.CharField(max_length=32)
     category = models.ForeignKey(StackToolsCategory, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', ], name='unique_stack_item')
+        ]
 
     def __str__(self):
         return self.name
@@ -17,6 +27,11 @@ class Company(models.Model):
     name = models.CharField(max_length=128, null=True)
     country = models.CharField(max_length=32, default='Россия')
     city = models.CharField(max_length=32, default='Москва')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'country'], name='unique_company')
+        ]
 
     def __str__(self):
         return self.name
@@ -35,6 +50,11 @@ class Vacancy(models.Model):
     stack = models.ManyToManyField(StackTools)
     link = models.URLField(null=True)
     date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['title', 'company', 'salary_from', 'salary_to'], name='unique_vacancy')
+        ]
 
     def __str__(self):
         return self.title
