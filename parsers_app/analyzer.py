@@ -25,7 +25,7 @@ class Analyzer:
         'Директор по информационным технологиям (CIO)': ('директор по информационным технологиям',),
         'Менеджер продукта': ('менеджер продукта',),
         'Методолог': ('методолог',),
-        'Программист': ('программист', 'разработчик'),
+        'Программист': ('программист', 'разработчик', 'веб-разработчик'),
         'Продуктовый аналитик': ('продуктовый аналитик',),
         'Руководитель группы разработки': ('руководитель группы разработки',),
         'Руководитель отдела аналитики': ('руководитель отдела аналитики',),
@@ -42,13 +42,13 @@ class Analyzer:
 
     @staticmethod
     def get_speciality(title: str, text: str):
-        for word in title.split(' '):
-            for k, v in Analyzer.SPECIALITIES.items():
-                if word.lower() in v:
+        for k, v in Analyzer.SPECIALITIES.items():
+            for item in v:
+                if item in title.lower():
                     return k
-        for word in text.split(' '):
-            for k, v in Analyzer.SPECIALITIES.items():
-                if word.lower() in v:
+        for k, v in Analyzer.SPECIALITIES.items():
+            for item in v:
+                if item in text.lower():
                     return k
         return None
 
