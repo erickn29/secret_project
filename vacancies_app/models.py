@@ -14,7 +14,7 @@ class Company(models.Model):
     city = models.CharField(max_length=255, default='Москва', null=True)
 
     def __str__(self):
-        return self.name
+        return f'Название: {self.name} / Город: {self.city}'
 
 
 class Vacancy(models.Model):

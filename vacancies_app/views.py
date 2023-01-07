@@ -1,5 +1,8 @@
 import json
+import re
 from pathlib import Path
+
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from .vacancies_generator import vacancy_generator
@@ -34,9 +37,32 @@ logger = BaseLogger(current_file=Path(__file__).name)
 
 class VacancyListViewSet(generics.ListCreateAPIView):
     # print(Path(__file__).name)
-    logger.error('error')
-    queryset = Vacancy.objects.all().order_by('-date')
+    # logger.error('error')
+    queryset = Vacancy.objects.all()
     serializer_class = VacancyListSerializer
+
+    def get(self, request, *args, **kwargs):
+        exp_list = ['нет опыта', 'от 1 года', 'от 3 лет', 'более 5 лет']
+        cities = set(sum(Company.objects.values_list('city'), ()))
+        city_list = set()
+        for el in cities:
+            if isinstance(el, str):
+                city_list.add(el.split(',')[0].strip())
+            else:
+                city_list.add(el)
+        if len(request.GET) > 0:
+            data = request.GET
+            salary_from = data.get('salary_from', 0)
+            experience = data.get('experience')
+            location = data.get('location', '[а-яА-Я]')
+            grade = data.get('grade', '[a-zA-z]')
+            self.queryset = Vacancy.objects.filter(
+                Q(salary_from__gte=int(salary_from)) | Q(salary_from=None, salary_to__gte=salary_from),
+                Q(experience=experience) | Q(experience__isnull=False),
+                Q(company__city__regex=rf'{location}') | Q(company__city__isnull=True) & Q(company__country__regex=rf'{location}'),  # Не баг, а фича
+                Q(grade__regex=rf'{grade}') | Q(grade__isnull=True) & Q(company__country__regex=rf'{location}'),  # Не баг, а фича №2
+            )
+        return self.list(request, *args, **kwargs)
 
 
 class VacancyViewSet(generics.RetrieveUpdateDestroyAPIView):
