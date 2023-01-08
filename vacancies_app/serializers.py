@@ -27,7 +27,7 @@ class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
 class StackSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = StackTools
-        fields = ['name', ]
+        fields = ['name', 'count', ]
 
 
 class CompanySerializer(serializers.HyperlinkedModelSerializer):

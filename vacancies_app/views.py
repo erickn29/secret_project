@@ -102,6 +102,11 @@ class ExperienceListViewSet(generics.ListCreateAPIView):
     serializer_class = ExperienceSerializer
 
 
+class StackListViewSet(generics.ListCreateAPIView):
+    queryset = StackTools.objects.all().order_by('-count')[:100]
+    serializer_class = StackSerializer
+
+
 def fake_db(request, count):
     vacancies = vacancy_generator(count)
     for vacancy in vacancies:
@@ -136,5 +141,17 @@ def get_hh_vacancies(request, parser_token):
         vacancies = obj.get_vacancies()
         obj.vacancies_to_db(vacancies)
         return HttpResponse(str(vacancies))
+    else:
+        raise Http404
+
+
+def test(request):
+    if request.GET.get('test'):
+        queryset = StackTools.objects.all()
+        for obj in queryset:
+            count = Vacancy.stack.through.objects.filter(stacktools_id=obj.id).count()
+            obj.count = count
+            obj.save()
+        return HttpResponse('ok')
     else:
         raise Http404
