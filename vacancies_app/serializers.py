@@ -14,7 +14,8 @@ class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
             # 'text',
             'salary_from',
             'salary_to',
-            # 'speciality',
+            'is_remote',
+            'speciality',
             'experience',
             'grade',
             'stack',
@@ -33,6 +34,30 @@ class CompanySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Company
         fields = ['name', 'country', 'city']
+
+
+class SpecialitySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Vacancy
+        fields = ['speciality', ]
+
+
+class GradeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Vacancy
+        fields = ['grade', ]
+
+
+class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Vacancy
+        fields = ['experience', ]
+
+
+class CitySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['city', ]
 
 
 class VacancySerializer(serializers.HyperlinkedModelSerializer):

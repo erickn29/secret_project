@@ -11,6 +11,10 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('vacancies/', views.VacancyListViewSet.as_view()),
+    path('specialities/', views.SpecialityListViewSet.as_view()),
+    path('grades/', views.GradeListViewSet.as_view()),
+    path('cities/', views.CityListViewSet.as_view()),
+    path('experiences/', views.ExperienceListViewSet.as_view()),
     path('vacancies/search', views.VacancyListViewSet.as_view()),
     path('vacancies/<int:pk>/', views.VacancyViewSet.as_view()),
     path('fake_db/<int:count>', views.fake_db, name='fake_db'),

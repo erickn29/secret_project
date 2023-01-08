@@ -59,7 +59,7 @@ class HhParser(BaseParser):
                         block_link = block.find_all_next('a', {'data-qa': 'serp-item__title'})[0]['href']
                         watched.append((block_title, block_salary, block_company))
                         if len(watched) > 1:
-                            if (block_title, block_salary, block_company) not in watched[:-1]:
+                            if ((block_title, block_salary, block_company) not in watched[:-1]) and not (set(block_title.lower().split()) & set(self.STOP_WORDS)):
                                 links_list.append(block_link)
                     time.sleep(random.randint(1, 3))
             except Exception as e:

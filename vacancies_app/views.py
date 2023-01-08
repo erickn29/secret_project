@@ -1,7 +1,6 @@
 import json
 import re
 from pathlib import Path
-
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
@@ -9,7 +8,7 @@ from .vacancies_generator import vacancy_generator
 from .models import *
 # from rest_framework import viewsets
 # from rest_framework import permissions
-from .serializers import VacancyListSerializer, VacancySerializer
+from .serializers import *
 from rest_framework import generics
 from parsers_app.hh_parser import HhParser
 from parsers_app.base_parser import BaseParser
@@ -42,32 +41,65 @@ class VacancyListViewSet(generics.ListCreateAPIView):
     serializer_class = VacancyListSerializer
 
     def get(self, request, *args, **kwargs):
-        exp_list = ['нет опыта', 'от 1 года', 'от 3 лет', 'более 5 лет']
-        cities = set(sum(Company.objects.values_list('city'), ()))
-        city_list = set()
-        for el in cities:
-            if isinstance(el, str):
-                city_list.add(el.split(',')[0].strip())
-            else:
-                city_list.add(el)
         if len(request.GET) > 0:
             data = request.GET
-            salary_from = data.get('salary_from', 0)
-            experience = data.get('experience')
-            location = data.get('location', '[а-яА-Я]')
-            grade = data.get('grade', '[a-zA-z]')
-            self.queryset = Vacancy.objects.filter(
-                Q(salary_from__gte=int(salary_from)) | Q(salary_from=None, salary_to__gte=salary_from),
-                Q(experience=experience) | Q(experience__isnull=False),
-                Q(company__city__regex=rf'{location}') | Q(company__city__isnull=True) & Q(company__country__regex=rf'{location}'),  # Не баг, а фича
-                Q(grade__regex=rf'{grade}') | Q(grade__isnull=True) & Q(company__country__regex=rf'{location}'),  # Не баг, а фича №2
-            )
+            queryset = Vacancy.objects.all()
+            logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('language'):
+                language = data.get('language')
+                queryset = queryset.filter(Q(title__icontains=language) | Q(text__icontains=language))
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('salary_from'):
+                salary_from = data.get('salary_from', 0)
+                queryset = queryset.filter(Q(salary_from__gte=int(salary_from)) | Q(salary_from=None, salary_to__gte=salary_from))
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('location'):
+                location = data.get('location')
+                queryset = queryset.filter(company__city__icontains=location)
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('is_remote'):
+                is_remote = data.get('is_remote')
+                queryset = queryset.filter(is_remote=is_remote)
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('experience'):
+                experience = data.get('experience').replace(', ', ',').replace(' , ', ',').replace(' ,', ',').split(',')
+                queryset = queryset.filter(experience__in=experience)
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('speciality'):
+                speciality = data.get('speciality').replace(', ', ',').replace(' , ', ',').replace(' ,', ',').split(',')
+                queryset = queryset.filter(speciality__in=speciality)
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('grade'):
+                grade = data.get('grade').replace(', ', ',').replace(' , ', ',').replace(' ,', ',').split(',')
+                queryset = queryset.filter(grade__in=grade)
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            self.queryset = queryset
         return self.list(request, *args, **kwargs)
 
 
 class VacancyViewSet(generics.RetrieveUpdateDestroyAPIView):
     queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
+
+
+class SpecialityListViewSet(generics.ListCreateAPIView):
+    queryset = Vacancy.objects.distinct('speciality')
+    serializer_class = SpecialitySerializer
+
+
+class GradeListViewSet(generics.ListCreateAPIView):
+    queryset = Vacancy.objects.distinct('grade')
+    serializer_class = GradeSerializer
+
+
+class CityListViewSet(generics.ListCreateAPIView):
+    queryset = Company.objects.distinct('city')
+    serializer_class = CitySerializer
+
+
+class ExperienceListViewSet(generics.ListCreateAPIView):
+    queryset = Vacancy.objects.distinct('experience')
+    serializer_class = ExperienceSerializer
 
 
 def fake_db(request, count):
