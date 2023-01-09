@@ -2,6 +2,7 @@ import { React, useState, useEffect } from "react";
 import { Box, PageContent, PageHeader, Grid, Pagination } from "grommet";
 import Vacancies from "./Vacancies";
 import VacancyListFilter from "../Filters/VacancyListFilter";
+import { useScrollTo } from "react-use-window-scroll";
 import axios from "axios";
 
 const VacanciesListPage = () => {
@@ -9,6 +10,8 @@ const VacanciesListPage = () => {
   const [vacanciesCount, setVacanciesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const scrollTo = useScrollTo();
 
   async function fetchData(currentPage) {
     const allVacanciesURL = `http://localhost:8000/vacancies?page=${currentPage}`;
@@ -24,6 +27,8 @@ const VacanciesListPage = () => {
   }
   
   useEffect(() => {
+    console.log('scrollTo')
+    scrollTo(0, 0);
     fetchData(currentPage);
   }, [currentPage]);
 
@@ -41,7 +46,9 @@ const VacanciesListPage = () => {
         : <Vacancies isLoading={false} vacancies={vacancies}></Vacancies>
         }
 
-      <Box justify="center" align="center"> <Pagination page={currentPage} numberItems={vacanciesCount} onChange={handleListChange} /> </Box>
+        <Box justify="center" align="center"> 
+          <Pagination page={currentPage} numberItems={vacanciesCount} onChange={handleListChange} /> 
+        </Box>
       </Grid>
     </PageContent>
   );
