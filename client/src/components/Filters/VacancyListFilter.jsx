@@ -1,10 +1,49 @@
-import { React, useState } from 'react';
-import { Select } from 'grommet';
+import { React, useState, useEffect } from 'react';
+import { Select, Button } from 'grommet';
 
-const VacancyListFilter = () => {
-  const [valueExperience, setValueExperience] = useState('');
-  const [valueGrade, setValueGrade] = useState('');
-  const [valueSpeciality, setValueSpeciality] = useState('');
+const VacancyListFilter = (props) => {
+  const [valueExperience, setValueExperience] = useState([]);
+  const [valueGrade, setValueGrade] = useState([]);
+  const [valueSpeciality, setValueSpeciality] = useState([]);
+  const [valueCity, setValueCity] = useState([]);
+
+  const [cityList, setCityList] = useState([]);
+  const [specialityList, setSpecialityList] = useState([]);
+
+  async function fetchFilterOptions(optionName) {
+    const optionUrl = `http://localhost:8000/${optionName}`;
+    
+    setIsLoading(true);
+    let response = await axios.get(optionUrl);
+
+    let optionResults = response.data.results;
+
+    if (optionName === 'cities') {
+      setCityList(optionResults);
+    } else if (optionName === 'specialities') {
+      setSpecialityList(optionResults);
+    }
+
+    setIsLoading(false);
+  }
+
+  async function fetchVacanciesByOptions() {
+    const vacanciesByOptionUrl = `http://localhost:8000/vacancies/search`;
+    
+    setIsLoading(true);
+    let response = await axios.get(optionUrl, { params: { answer: 42 } });
+
+    let vacanciesByOption = response.data.results;
+    props.setVacancies(vacanciesByOption);
+    props.setVacanciesCount(vacanciesByOption.length);
+
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    fetchFilterOptions('cities');
+    fetchFilterOptions('specialities');
+  }, []);
 
   return (
     <form className='vacancy-list-filter'>
@@ -21,11 +60,18 @@ const VacancyListFilter = () => {
         placeholder="Грейд..."
       />
       <Select
-        options={['Backend', 'Frontend', 'DevOps', 'Machine Learning', 'UI/UX-дизайнер', 'Project Manager', 'Системный администратор', 'QA']}
+        options={[...specialityList]}
         value={valueSpeciality}
         onChange={({ option }) => setValueSpeciality(option)}
         placeholder="Специализация..."
       />
+      <Select
+        options={[...cityList]}
+        value={valueSpeciality}
+        onChange={({ option }) => setValueSpeciality(option)}
+        placeholder="Город..."
+      />
+      <Button primary label="Filter" onClick={() => fetchVacanciesByOptions()} />
     </form>
   )
 }

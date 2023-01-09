@@ -39,7 +39,7 @@ const VacanciesListPage = () => {
   return (
     <PageContent>
       <PageHeader alignSelf="center" title="Список вакансий" />
-      <VacancyListFilter></VacancyListFilter>
+      <VacancyListFilter vacanciesUpdate={setVacancies} vacanciesCountUpdate={setVacanciesCount}></VacancyListFilter>
       <Grid gap="large" pad={{ bottom: "large" }}>
         {isLoading 
         ? <Vacancies isLoading={true}></Vacancies>
