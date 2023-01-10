@@ -66,7 +66,10 @@ class BaseParser:
                         stack_obj = StackTools.objects.get_or_create(
                             name=stack,
                         )[0]
-                        stack_obj.count += 1
+                        if stack_obj.count:
+                            stack_obj.count += 1
+                        else:
+                            stack_obj.count = 1
                         stack_obj.save()
                         vacancy_obj.stack.add(stack_obj)
             except Exception as e:
