@@ -15,7 +15,8 @@ import { Moon, Sun } from "grommet-icons";
 import { deepMerge } from "grommet/utils";
 import AppRouter from "./components/AppRouter";
 import { useNavigate } from "react-router-dom";
-import { Github, Youtube, Reactjs } from 'grommet-icons';
+import { Github, Youtube, Reactjs, Grommet as GrommetIcon } from 'grommet-icons';
+import { useDispatch, useSelector } from "react-redux";
 
 // require('dotenv').config();
 
@@ -46,7 +47,7 @@ const AppBar = (props) => (
 function App() {
   const [dark, setDark] = useState(false);
   const navigate = useNavigate();
-
+  
   return (
     <Grommet theme={theme} full themeMode={dark ? "dark" : "light"}>
       <Page>
@@ -107,10 +108,11 @@ function App() {
 
           <footer className="wrapper__footer">
             <Footer background="brand" pad="medium">
-            <Reactjs color='defaultText' />
+            <Anchor href="https://ru.reactjs.org/" target="_blank" icon={<Reactjs color='defaultText' />} hoverIndicator />
               <div className="footer__icons">
                 <Anchor href="https://github.com/erickn29/secret_project" target="_blank" icon={<Github color='defaultText' />} hoverIndicator />
-                <Anchor href="https://www.youtube.com/" target="_blank" icon={<Youtube color='defaultText' />} hoverIndicator />
+                {/* <Anchor href="https://www.youtube.com/" target="_blank" icon={<Youtube color='defaultText' />} hoverIndicator /> */}
+                <Anchor href="https://v2.grommet.io/" target="_blank" icon={<GrommetIcon color='defaultText' />} hoverIndicator />
               </div>
               <Anchor label="About" color="defaultText" />
             </Footer>

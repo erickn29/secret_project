@@ -1,4 +1,4 @@
-GENERAL STRUCTURE
+/* GENERAL STRUCTURE */
 
 .wrapper {
   position: relative;
@@ -64,13 +64,9 @@ GENERAL STRUCTURE
 .vacancy-card {
   margin-bottom: 1.5rem;
   width: 100%;
-  /* !important плохо, ну а что еще делать, когда нужно переопределить вшитые стили ui библиотеки */
-  min-height: 300px !important;
-  height: 30vh;
 }
 
 /* VACANCY_DATA */
-
 .vacancy-card-full {
   margin-top: 2rem;
 }

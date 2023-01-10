@@ -17,6 +17,8 @@
     "react-scripts": "5.0.1",
     "react-use-window-scroll": "^1.0.14",
     "redux": "^4.2.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.2",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
   },

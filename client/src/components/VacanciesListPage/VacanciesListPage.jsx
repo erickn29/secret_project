@@ -4,9 +4,14 @@ import Vacancies from "./Vacancies";
 import VacancyListFilter from "../Filters/VacancyListFilter";
 import { useScrollTo } from "react-use-window-scroll";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { GENERAL_VACANCIES } from "../../redux/types";
 
 const VacanciesListPage = () => {
-  const [vacancies, setVacancies] = useState([]);
+  const vacancies = useSelector(state => state.vacanciesReducer);
+  const countOnPage = useSelector(state => state.countOnPageReducer.countOnPage);
+  const dispatch = useDispatch();
+
   const [vacanciesCount, setVacanciesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,11 +26,12 @@ const VacanciesListPage = () => {
 
     let vacancyList = response.data.results;
     let vacancyCount = response.data.count;
-    setVacancies(vacancyList);
+
+    dispatch({type: GENERAL_VACANCIES, payload: vacancyList});
     setVacanciesCount(vacancyCount);
     setIsLoading(false);
   }
-  
+
   useEffect(() => {
     console.log('scrollTo')
     scrollTo(0, 0);
@@ -39,7 +45,7 @@ const VacanciesListPage = () => {
   return (
     <PageContent>
       <PageHeader alignSelf="center" title="Список вакансий" />
-      <VacancyListFilter vacanciesUpdate={setVacancies} vacanciesCountUpdate={setVacanciesCount}></VacancyListFilter>
+      <VacancyListFilter></VacancyListFilter>
       <Grid gap="large" pad={{ bottom: "large" }}>
         {isLoading 
         ? <Vacancies isLoading={true}></Vacancies>
@@ -47,7 +53,7 @@ const VacanciesListPage = () => {
         }
 
         <Box justify="center" align="center"> 
-          <Pagination page={currentPage} numberItems={vacanciesCount} onChange={handleListChange} /> 
+          <Pagination page={currentPage} numberItems={vacanciesCount} onChange={handleListChange} step={countOnPage}/> 
         </Box>
       </Grid>
     </PageContent>
