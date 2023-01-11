@@ -60,6 +60,10 @@ class CitySerializer(serializers.HyperlinkedModelSerializer):
         fields = ['city', ]
 
 
+class CityListSerializer(serializers.Serializer):
+    cities = serializers.CharField()
+
+
 class VacancySerializer(serializers.HyperlinkedModelSerializer):
     stack = serializers.StringRelatedField(many=True)
     company = serializers.StringRelatedField(many=False)

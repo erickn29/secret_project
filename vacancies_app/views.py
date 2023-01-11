@@ -3,18 +3,22 @@ import re
 from pathlib import Path
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from .vacancies_generator import vacancy_generator
 from .models import *
 # from rest_framework import viewsets
 # from rest_framework import permissions
 from .serializers import *
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from parsers_app.hh_parser import HhParser
 from parsers_app.base_parser import BaseParser
 from dotenv import load_dotenv
 import os
 from miac_logger.logger import BaseLogger
+import itertools
 
 load_dotenv()
 logger = BaseLogger(current_file=Path(__file__).name)
@@ -95,6 +99,12 @@ class GradeListViewSet(generics.ListCreateAPIView):
 class CityListViewSet(generics.ListCreateAPIView):
     queryset = Company.objects.distinct('city')
     serializer_class = CitySerializer
+
+
+@api_view(['GET'])
+def cities_list(request):
+    cities = list(Company.objects.distinct('city').values_list('city', flat=True))
+    return Response({'result': cities})
 
 
 class ExperienceListViewSet(generics.ListCreateAPIView):
