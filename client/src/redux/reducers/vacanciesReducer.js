@@ -4,13 +4,10 @@ const initialState = {
   vacancies: [],
   loading: false,
   error: null,
-  page: 1,
-  countOnPage: 10,
+  allVacanciesCount: 10,
 };
 
-
 export const vacanciesReducer = (state = initialState, action) => {
-
   switch (action.type) {
     case GET_GENERAL_VACANCIES:
       return {
@@ -22,8 +19,7 @@ export const vacanciesReducer = (state = initialState, action) => {
         loading: false,
         error: null,
         vacancies: [...action.payload.vacancies],
-        page: action.payload.page,
-        countOnPage: action.payload.countOnPage,
+        allVacanciesCount: action.payload.allVacanciesCount,
       };
     case GET_GENERAL_VACANCIES_ERROR:
       return {
