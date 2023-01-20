@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { Select, Button } from 'grommet';
+import { Select, Button, Sidebar, Avatar } from 'grommet';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { FILTER_CITIES, FILTER_EXPIRIENCES, FILTER_GRADES, FILTER_SPECIALITIES, FILTER_STACKTOOLS } from "../../redux/types";
