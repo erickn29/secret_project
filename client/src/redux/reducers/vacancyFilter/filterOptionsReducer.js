@@ -18,7 +18,7 @@ export const filterOptionsReducer = (state = initialState, action) => {
     case FILTER_CITIES:
       return {...state, cities: [...action.payload]};
     case FILTER_EXPIRIENCES:
-      return {...state, expiriences: [...action.payload]};
+      return {...state, experiences: [...action.payload]};
     case FILTER_GRADES:
       return {...state, grades: [...action.payload]};
     case FILTER_SPECIALITIES:
