@@ -8,12 +8,13 @@ import { PAGINATION_SET_COUNT_ON_PAGE, PAGINATION_SET_PAGE } from "../../redux/t
 
 const VacanciesListPage = () => {
   const {vacancies, loading, error, allVacanciesCount} = useSelector(state => state.vacanciesReducer);
+  const filterData = useSelector(state => state.filterChosenOptionsReducer);
   const {page, countOnPage} = useSelector(state => state.paginationReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchVacancies(page, countOnPage));
-  }, [page, countOnPage]);
+    dispatch(fetchVacancies(page, countOnPage, filterData));
+  }, [page, countOnPage, filterData]);
 
   const pageChangeHandler = ({ page, startIndex, endIndex }) => {
     dispatch({type: PAGINATION_SET_PAGE, payload: page});
@@ -22,7 +23,7 @@ const VacanciesListPage = () => {
   return (
     <PageContent>
       <PageHeader alignSelf="center" title="Список вакансий" />
-      {/* <VacancyListFilter></VacancyListFilter> */}
+      <VacancyListFilter></VacancyListFilter>
       <Grid gap="large" pad={{ bottom: "large" }}>
         { loading ? <Spinner /> : <Vacancies /> }
         <Box align="center" direction="row" justify="between">

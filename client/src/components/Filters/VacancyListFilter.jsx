@@ -1,71 +1,25 @@
 import { React, useState, useEffect } from 'react';
 import { Select, Button, Sidebar, Avatar } from 'grommet';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import { FILTER_CITIES, FILTER_EXPIRIENCES, FILTER_GRADES, FILTER_SPECIALITIES, FILTER_STACKTOOLS } from "../../redux/types";
+import { fetchFilterValues } from '../../redux/action_creators/vacancyFilters';
+
+import { SET_FILTER_CITY, SET_FILTER_EXPERIENCE, SET_FILTER_GRADE, SET_FILTER_SPECIALITY, SET_FILTER_STACKTOOL, SET_FILTER_VALUE_CLEAR } from "../../redux/types";
 
 const VacancyListFilter = (props) => {
-
-  const [selectedCity, setSelectedCity] = useState('');
+  const { cities, experiences, grades, specialities, stacktools } = useSelector(state => state.filterOptionsReducer);
+  const { city, experience, grade, speciality, stacktool } = useSelector(state => state.filterChosenOptionsReducer);
   const dispatch = useDispatch();
-  let citiesInFilter = useSelector(state => state.filterOptionsReducer.cities);
-
-  if (citiesInFilter === undefined) {
-    citiesInFilter = [];
-  }
-
-  async function fetchFilterOptions(optionName) {
-    const optionUrl = `http://localhost:8000/${optionName}`;
-
-    // setIsLoading(true);
-    const response = await axios.get(optionUrl);
-
-    const optionResults = response.data.results;
-
-    const action = {type: '', payload: optionResults};
-
-    switch (optionName) {
-      // case 'cities':
-      //   action.type = FILTER_CITIES;
-      //   break;
-      case 'cities_by_list':
-        const citiesFilterResult = response.data.result;
-        action.payload = citiesFilterResult;
-        action.type = FILTER_CITIES;
-        break;
-      case 'experiences':
-        action.type = FILTER_EXPIRIENCES;
-        break;
-      case 'specialities':
-        action.type = FILTER_SPECIALITIES;
-        break;
-      case 'grades':
-        action.type = FILTER_GRADES;
-        break;
-      case 'stacktools':
-        action.type = FILTER_STACKTOOLS;
-        break;
-    }
-
-    dispatch(action);
-    // setIsLoading(false);
-  }
 
   useEffect(() => {
-    console.log('FETCH START')
-    fetchFilterOptions('cities_by_list');
-    fetchFilterOptions('specialities');
-    fetchFilterOptions('grades');
-    fetchFilterOptions('experiences');
-    fetchFilterOptions('stacktools');
+    dispatch(fetchFilterValues());
   }, []);
 
   return (
     <form className='vacancy-list-filter'>
         <Select
-          options={[...citiesInFilter]}
-          value={selectedCity}
-          onChange={({ option }) => setSelectedCity(option)}
+          options={[...cities]}
+          value={city}
+          onChange={({ option }) => dispatch({type: SET_FILTER_CITY, payload: option})}
           placeholder="Город..."
         />
       {/* <Select
