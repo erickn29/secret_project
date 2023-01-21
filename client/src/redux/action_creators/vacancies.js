@@ -15,7 +15,7 @@ export const fetchVacancies = (page = 1, countOnPage = 10, filterData) => {
       // } 
       
       if (true) {
-        response = await axios.get(FILTER_VACANCIES_API_URL, { params: { page: page, location: filterData.city} } );
+        response = await axios.get(FILTER_VACANCIES_API_URL, { params: { page: page, location: filterData.city, salary_from: filterData.chosenSalaryFrom, is_remote: filterData.isRemote === true ? 1 : 0 } } );
       }
       
       dispatch({type: GET_GENERAL_VACANCIES_SUCCESS, 

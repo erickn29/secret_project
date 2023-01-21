@@ -6,6 +6,10 @@ const initialState = {
   grades: [],
   specialities: [],
   stacktools: [],
+  salaryFrom: 0,
+  salaryTo: 300000,
+  salaryStep: 50000,
+  canRemote: false,
   error: null,
 };
 
