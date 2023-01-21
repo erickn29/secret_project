@@ -1,45 +1,23 @@
 import { React, useState, useEffect } from "react";
-import { Box, PageContent, PageHeader, Grid, Pagination } from "grommet";
+import { Box, PageContent, PageHeader, Grid, Pagination, Sidebar, Avatar, Spinner, Text } from "grommet";
 import Vacancies from "./Vacancies";
 import VacancyListFilter from "../Filters/VacancyListFilter";
-import { useScrollTo } from "react-use-window-scroll";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { GENERAL_VACANCIES } from "../../redux/types";
+import { fetchVacancies } from "../../redux/action_creators/vacancies";
+import { PAGINATION_SET_COUNT_ON_PAGE, PAGINATION_SET_PAGE } from "../../redux/types";
 
 const VacanciesListPage = () => {
-  const vacancies = useSelector(state => state.vacanciesReducer);
-  const countOnPage = useSelector(state => state.countOnPageReducer.countOnPage);
+  const {vacancies, loading, error, allVacanciesCount} = useSelector(state => state.vacanciesReducer);
+  const filterData = useSelector(state => state.filterChosenOptionsReducer);
+  const {page, countOnPage} = useSelector(state => state.paginationReducer);
   const dispatch = useDispatch();
 
-  const [vacanciesCount, setVacanciesCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const scrollTo = useScrollTo();
-
-  async function fetchData(currentPage) {
-    const allVacanciesURL = `http://localhost:8000/vacancies?page=${currentPage}`;
-    
-    setIsLoading(true);
-    let response = await axios.get(allVacanciesURL);
-
-    let vacancyList = response.data.results;
-    let vacancyCount = response.data.count;
-
-    dispatch({type: GENERAL_VACANCIES, payload: vacancyList});
-    setVacanciesCount(vacancyCount);
-    setIsLoading(false);
-  }
-
   useEffect(() => {
-    console.log('scrollTo')
-    scrollTo(0, 0);
-    fetchData(currentPage);
-  }, [currentPage]);
+    dispatch(fetchVacancies(page, countOnPage, filterData));
+  }, [page, countOnPage, filterData]);
 
-  const handleListChange = ({page, startIndex, endIndex}) => {
-    setCurrentPage(page);
+  const pageChangeHandler = ({ page, startIndex, endIndex }) => {
+    dispatch({type: PAGINATION_SET_PAGE, payload: page});
   }
 
   return (
@@ -47,13 +25,12 @@ const VacanciesListPage = () => {
       <PageHeader alignSelf="center" title="Список вакансий" />
       <VacancyListFilter></VacancyListFilter>
       <Grid gap="large" pad={{ bottom: "large" }}>
-        {isLoading 
-        ? <Vacancies isLoading={true}></Vacancies>
-        : <Vacancies isLoading={false} vacancies={vacancies}></Vacancies>
-        }
-
-        <Box justify="center" align="center"> 
-          <Pagination page={currentPage} numberItems={vacanciesCount} onChange={handleListChange} step={countOnPage}/> 
+        { loading ? <Spinner /> : <Vacancies /> }
+        <Box align="center" direction="row" justify="between">
+          <Text>
+            Всего {allVacanciesCount}
+          </Text>
+          <Pagination page={page} numberItems={allVacanciesCount} step={countOnPage} onChange={pageChangeHandler}/> 
         </Box>
       </Grid>
     </PageContent>

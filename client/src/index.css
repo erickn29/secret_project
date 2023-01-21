@@ -61,6 +61,11 @@
   margin-bottom: 1rem !important;
 }
 
+.filter-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .vacancy-card {
   margin-bottom: 1.5rem;
   width: 100%;
