@@ -12,10 +12,13 @@ from rest_framework.urlpatterns import format_suffix_patterns
 urlpatterns = [
     path('vacancies/', views.VacancyListViewSet.as_view()),
     path('specialities/', views.SpecialityListViewSet.as_view()),
+    path('specialities_by_list/', views.specialities_list),
     path('grades/', views.GradeListViewSet.as_view()),
+    path('grades_by_list/', views.grades_list),
     path('cities/', views.CityListViewSet.as_view()),
     path('cities_by_list/', views.cities_list),
     path('experiences/', views.ExperienceListViewSet.as_view()),
+    path('experiences_by_list/', views.experiences_list),
     path('stacktools/', views.StackListViewSet.as_view()),
     path('vacancies/search', views.VacancyListViewSet.as_view()),
     path('vacancies/<int:pk>/', views.VacancyViewSet.as_view()),

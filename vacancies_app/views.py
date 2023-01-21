@@ -107,6 +107,24 @@ def cities_list(request):
     return Response({'result': cities})
 
 
+@api_view(['GET'])
+def grades_list(request):
+    grades = list(Vacancy.objects.distinct('grade').values_list('grade', flat=True))
+    return Response({'result': grades})
+
+
+@api_view(['GET'])
+def experiences_list(request):
+    experiences = list(Vacancy.objects.distinct('experience').values_list('experience', flat=True))
+    return Response({'result': experiences})
+
+
+@api_view(['GET'])
+def specialities_list(request):
+    specialities = list(Vacancy.objects.distinct('speciality').values_list('speciality', flat=True))
+    return Response({'result': specialities})
+
+
 class ExperienceListViewSet(generics.ListCreateAPIView):
     queryset = Vacancy.objects.distinct('experience')
     serializer_class = ExperienceSerializer
