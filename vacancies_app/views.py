@@ -125,6 +125,12 @@ def specialities_list(request):
     return Response({'result': specialities})
 
 
+@api_view(['GET'])
+def languages_list(request):
+    languages = ['Python', 'PHP', 'C', 'C++', 'C#', 'JavaScript', 'Java']
+    return Response({'result': languages})
+
+
 class ExperienceListViewSet(generics.ListCreateAPIView):
     queryset = Vacancy.objects.distinct('experience')
     serializer_class = ExperienceSerializer
