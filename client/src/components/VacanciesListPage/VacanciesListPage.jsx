@@ -15,6 +15,7 @@ const VacanciesListPage = () => {
   useEffect(() => {
     dispatch(fetchVacancies(page, countOnPage, filterData));
   }, [page, countOnPage, filterData]);
+  // 
 
   const pageChangeHandler = ({ page, startIndex, endIndex }) => {
     dispatch({type: PAGINATION_SET_PAGE, payload: page});

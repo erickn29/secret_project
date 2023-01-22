@@ -15,19 +15,19 @@ export const fetchFilterValues = () => {
       let responseExperiences = await axios.get(FILTER_LIST_EXPERIENCES_API_URL);
       
       dispatch({type: FILTER_EXPIRIENCES, 
-        payload: responseExperiences.data.results,
+        payload: responseExperiences.data.result,
       });
 
       let responseGrades = await axios.get(FILTER_LIST_GRADES_API_URL);
       
       dispatch({type: FILTER_GRADES, 
-        payload: responseGrades.data.results,
+        payload: responseGrades.data.result,
       });
 
       let responseSpecialities = await axios.get(FILTER_LIST_SPECIALITIES_API_URL);
       
       dispatch({type: FILTER_SPECIALITIES, 
-        payload: responseSpecialities.data.results,
+        payload: responseSpecialities.data.result,
       });
 
       let responseStacktools = await axios.get(FILTER_LIST_STACKTOOLS_API_URL);

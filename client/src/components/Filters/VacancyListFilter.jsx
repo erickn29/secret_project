@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { Select, Button, Sidebar, Avatar, TextInput, RangeSelector, Stack, Box, Text, CheckBox } from 'grommet';
+import { Select, Button, Sidebar, Avatar, TextInput, RangeSelector, Stack, Box, Text, CheckBox, SelectMultiple } from 'grommet';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchFilterValues } from '../../redux/action_creators/vacancyFilters';
 
@@ -31,7 +31,9 @@ const VacancyListFilter = (props) => {
         <TextInput
           placeholder="Город..."
           value={city}
-          onChange={(event) => dispatch({type: SET_FILTER_CITY, payload: event.target.value})}
+          onChange={(event) => 
+            dispatch({type: SET_FILTER_CITY, payload: event.target.value})
+        }
           list="cities-filter-list"
         />
         <datalist id="cities-filter-list">
@@ -85,6 +87,28 @@ const VacancyListFilter = (props) => {
         onChange={({ option }) => dispatch({type: SET_FILTER_CITY, payload: option})}
         placeholder="Город..."
       /> */}
+
+    <SelectMultiple
+      placeholder="Грейд..."
+      options={[...grades]}
+      onChange={({ value, option }) => {
+        dispatch({type: SET_FILTER_GRADE, payload: value});
+      }}
+    />
+    <SelectMultiple
+      placeholder="Специальность..."
+      options={[...specialities]}
+      onChange={({ value, option }) => {
+        dispatch({type: SET_FILTER_SPECIALITY, payload: value});
+      }}
+    />
+    <SelectMultiple
+      placeholder="Опыт..."
+      options={[...experiences]}
+      onChange={({ value, option }) => {
+        // dispatch({type: SET_FILTER_EXPERIENCE, payload: value});
+      }}
+    />
     </form>
   )
 }
