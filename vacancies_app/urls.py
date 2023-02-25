@@ -27,6 +27,7 @@ urlpatterns = [
     path('test/', views.test, name='test'),
     path('vacancies/get_hh_vacancies/<parser_token>', views.get_hh_vacancies, name='get_hh_vacancies'),
     path('vacancies/get_habr_vacancies/<parser_token>', views.get_habr_vacancies, name='get_habr_vacancies'),
+    path('vacancies/get_superjob_vacancies/<parser_token>', views.get_superjob_vacancies, name='get_superjob_vacancies'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
