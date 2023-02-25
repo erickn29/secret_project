@@ -23,6 +23,13 @@ class Analyzer:
         'Lead': 'более 5 лет'
     }
 
+    SUPERJOB_EXPERIENCE = {
+        'Опыт работы не требуется': 'нет опыта',
+        'Опыт работы от 1 года': 'от 1 года',
+        'Опыт работы от 3 лет': 'от 3 лет',
+        'Опыт работы от 5 лет': 'более 5 лет',
+    }
+
     SPECIALITIES = {
         'DevOps-инженер': ('devops', 'девопс'),
         'Аналитик': ('аналитик',),
@@ -74,13 +81,20 @@ class Analyzer:
         for word in text.split(' '):
             for k, v in Analyzer.GRADES.items():
                 if word.lower() in v:
-                    return k
+                    return v
         return None
 
     @staticmethod
     def get_experience(text: str):
         for k, v in Analyzer.HH_EXPERIENCE.items():
             if text in v:
+                return k
+        return None
+
+    @staticmethod
+    def get_superjob_experience(text: str):
+        for k, v in Analyzer.SUPERJOB_EXPERIENCE.items():
+            if k in text:
                 return k
         return None
 

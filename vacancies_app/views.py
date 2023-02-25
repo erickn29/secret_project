@@ -194,7 +194,7 @@ def get_habr_vacancies(request, parser_token):
 def get_superjob_vacancies(request, parser_token):
     if parser_token == os.getenv('PARSER_TOKEN'):
         obj = SuperJobParser(BaseParser.SUPERJOBLINK)
-        links = obj.get_vacancies_links()
+        links = obj.get_vacancies()
         # vacancies = obj.get_vacancies()
         # obj.vacancies_to_db(vacancies)
         return HttpResponse(links)
