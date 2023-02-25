@@ -25,7 +25,8 @@ urlpatterns = [
     path('vacancies/<int:pk>/', views.VacancyViewSet.as_view()),
     # path('fake_db/<int:count>', views.fake_db, name='fake_db'),
     path('test/', views.test, name='test'),
-    path('vacancies/get_hh_vacancies/<parser_token>', views.get_hh_vacancies, name='get_hh_vacancies')
+    path('vacancies/get_hh_vacancies/<parser_token>', views.get_hh_vacancies, name='get_hh_vacancies'),
+    path('vacancies/get_habr_vacancies/<parser_token>', views.get_habr_vacancies, name='get_habr_vacancies'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

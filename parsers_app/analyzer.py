@@ -1,7 +1,7 @@
 class Analyzer:
 
     GRADES = {
-        'Trainee': ['trainee', 'стажер'],
+        'Trainee': ['trainee', 'стажер', 'стажёр'],
         'Junior': ['junior', 'джуниор'],
         'Middle': ['middle', 'миддл'],
         'Senior': ['senior', 'сеньор', 'сениор'],
@@ -13,6 +13,14 @@ class Analyzer:
         'от 1 года': '1–3 года',
         'от 3 лет': '3–6 лет',
         'более 5 лет': 'более 6 лет'
+    }
+
+    HABR_EXPERIENCE = {
+        'Trainee': 'нет опыта',
+        'Junior': 'от 1 года',
+        'Middle': 'от 3 лет',
+        'Senior': 'более 5 лет',
+        'Lead': 'более 5 лет'
     }
 
     SPECIALITIES = {

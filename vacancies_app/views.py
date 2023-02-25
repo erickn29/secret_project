@@ -14,6 +14,7 @@ from .models import *
 from .serializers import *
 from rest_framework import generics, viewsets
 from parsers_app.hh_parser import HhParser
+from parsers_app.habr_parser import HabrParser
 from parsers_app.base_parser import BaseParser
 from dotenv import load_dotenv
 import os
@@ -172,6 +173,16 @@ def fake_db(request, count):
 def get_hh_vacancies(request, parser_token):
     if parser_token == os.getenv('PARSER_TOKEN'):
         obj = HhParser(BaseParser.HH_LINK)
+        vacancies = obj.get_vacancies()
+        obj.vacancies_to_db(vacancies)
+        return HttpResponse(str(vacancies))
+    else:
+        raise Http404
+
+
+def get_habr_vacancies(request, parser_token):
+    if parser_token == os.getenv('PARSER_TOKEN'):
+        obj = HabrParser(BaseParser.HABR_LINK)
         vacancies = obj.get_vacancies()
         obj.vacancies_to_db(vacancies)
         return HttpResponse(str(vacancies))
