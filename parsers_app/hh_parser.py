@@ -39,6 +39,7 @@ class HhParser(BaseParser):
                 page_list.append(url)
             return page_list
         page_list.append(self.url + f'&page={pages}')
+        return [self.url, ]
 
     def _get_vacancies_links(self, pages: list) -> list:
         """Получаем список ссылок на вакансии"""

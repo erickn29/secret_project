@@ -1,3 +1,6 @@
+from vacancies_app.models import StackTools
+
+
 class Analyzer:
 
     GRADES = {
@@ -21,6 +24,13 @@ class Analyzer:
         'Middle': 'от 3 лет',
         'Senior': 'более 5 лет',
         'Lead': 'более 5 лет'
+    }
+
+    SUPERJOB_EXPERIENCE = {
+        'Опыт работы не требуется': 'нет опыта',
+        'Опыт работы от 1 года': 'от 1 года',
+        'Опыт работы от 3 лет': 'от 3 лет',
+        'Опыт работы от 5 лет': 'более 5 лет',
     }
 
     SPECIALITIES = {
@@ -63,7 +73,7 @@ class Analyzer:
             for item in v:
                 if item in text.lower():
                     return k
-        return None
+        return
 
     @staticmethod
     def get_grade(title: str, text: str):
@@ -75,12 +85,36 @@ class Analyzer:
             for k, v in Analyzer.GRADES.items():
                 if word.lower() in v:
                     return k
-        return None
+        return
 
     @staticmethod
     def get_experience(text: str):
         for k, v in Analyzer.HH_EXPERIENCE.items():
             if text in v:
                 return k
-        return None
+        return
+
+    @staticmethod
+    def get_superjob_experience(text: str):
+        for k, v in Analyzer.SUPERJOB_EXPERIENCE.items():
+            if k in text:
+                return k
+        return
+
+    @staticmethod
+    def get_stack_raw_text(text: str):
+        from parsers_app.base_parser import BaseParser
+        stack_values = list(StackTools.objects.values_list('name', flat=True))
+        stack_list = []
+        cleaned_text = BaseParser.text_cleaner(text).lower()
+        for stack in stack_values:
+            if stack.lower() in cleaned_text and len(stack) > 1 and stack not in stack_list:
+                stack_list.append(stack)
+                print(f'Find stack in superjob vacancy [{stack}]')
+        return stack_list
+
+    @staticmethod
+    def get_experience_raw_text(text: str):
+        from parsers_app.base_parser import BaseParser
+        cleaned_text = BaseParser.text_cleaner(text).lower()
 
