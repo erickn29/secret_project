@@ -195,7 +195,7 @@ def get_superjob_vacancies(request, parser_token):
     if parser_token == os.getenv('PARSER_TOKEN'):
         obj = SuperJobParser(BaseParser.SUPERJOBLINK)
         vacancies = obj.get_vacancies()
-        # obj.vacancies_to_db(vacancies)
+        obj.vacancies_to_db(vacancies)
         return JsonResponse(vacancies)
     else:
         raise Http404
