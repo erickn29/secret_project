@@ -16,6 +16,7 @@ from rest_framework import generics, viewsets
 from parsers_app.hh_parser import HhParser
 from parsers_app.habr_parser import HabrParser
 from parsers_app.superjob_parser import SuperJobParser
+from parsers_app.getmatch_parser import GetMatchParser
 from parsers_app.base_parser import BaseParser
 from dotenv import load_dotenv
 import os
@@ -194,6 +195,16 @@ def get_habr_vacancies(request, parser_token):
 def get_superjob_vacancies(request, parser_token):
     if parser_token == os.getenv('PARSER_TOKEN'):
         obj = SuperJobParser(BaseParser.SUPERJOBLINK)
+        vacancies = obj.get_vacancies()
+        obj.vacancies_to_db(vacancies)
+        return JsonResponse(vacancies)
+    else:
+        raise Http404
+
+
+def get_getmatch_vacancies(request, parser_token):
+    if parser_token == os.getenv('PARSER_TOKEN'):
+        obj = GetMatchParser(BaseParser.GETMATCH_LINK)
         vacancies = obj.get_vacancies()
         obj.vacancies_to_db(vacancies)
         return JsonResponse(vacancies)

@@ -35,7 +35,7 @@ class Analyzer:
 
     SPECIALITIES = {
         'DevOps-инженер': ('devops', 'девопс'),
-        'Аналитик': ('аналитик',),
+        'Аналитик': ('аналитик', 'analyst'),
         'Арт-директор': ('арт-директор', 'арт директор'),
         'Бизнес-аналитик': ('бизнес-аналитик', 'бизнес аналитик'),
         'Гейм-дизайнер': ('гейм-дизайнер', 'гейм дизайнер'),
@@ -99,6 +99,13 @@ class Analyzer:
         for k, v in Analyzer.SUPERJOB_EXPERIENCE.items():
             if k in text:
                 return k
+        return
+
+    @staticmethod
+    def get_getmatch_experience(text: str):
+        for k, v in Analyzer.HABR_EXPERIENCE.items():
+            if k in text:
+                return v
         return
 
     @staticmethod
