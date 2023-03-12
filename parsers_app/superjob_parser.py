@@ -97,6 +97,7 @@ class SuperJobParser(BaseParser):
             print(e)
 
     def get_vacancies(self, wright_to_file: bool = True) -> dict:
+        # ftc
         vacancy_dict = {'vacancies': []}
         html = self._get_vacancies_list_html()
         pages_list = self._get_pages(html)
