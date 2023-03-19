@@ -1,5 +1,8 @@
 import json
+import operator
 import re
+from datetime import datetime
+from functools import reduce
 from pathlib import Path
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -8,6 +11,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
+from parsers_app.analyzer import Analyzer
 from .vacancies_generator import vacancy_generator
 from .models import *
 # from rest_framework import viewsets
@@ -55,8 +59,20 @@ class VacancyListViewSet(generics.ListCreateAPIView):
             queryset = Vacancy.objects.all()
             logger.debug(f'Размер queryset = {len(queryset)}')
             if data.get('language'):
-                language = data.get('language')
-                queryset = queryset.filter(Q(title__icontains=language) | Q(text__icontains=language))
+                # langs = ['Python', 'PHP', 'C', 'С++', 'C#', 'JavaScript', 'Java', 'Golang', 'С#', 'Vue', 'JS', 'TS', '1C', 'Node', 'React']
+                # language = data.get('language')
+                # queryset = queryset.filter(
+                #     Q(
+                #         reduce(operator.or_, (Q(title__icontains=x.lower()) for x in Analyzer.SPECIALITIES['Программист'])) &
+                #         reduce(operator.and_, (~Q(title__icontains=x) for x in langs)) &
+                #         Q(text__icontains=language)
+                #     ) |
+                #     Q(title__icontains=language)
+                #     # Q(title_icontains=language) |
+                #     # ~Q(text__icontains=language)
+                #     # Q(title__icontains=language) | Q(text__icontains=language)
+                # )
+                queryset = queryset.filter(language=Language.objects.get(name=data.get('language')))
                 logger.debug(f'Размер queryset = {len(queryset)}')
             if data.get('salary_from'):
                 salary_from = data.get('salary_from', 0)
@@ -81,6 +97,9 @@ class VacancyListViewSet(generics.ListCreateAPIView):
             if data.get('grade'):
                 grade = data.get('grade').replace(', ', ',').replace(' , ', ',').replace(' ,', ',').split(',')
                 queryset = queryset.filter(grade__in=grade)
+                logger.debug(f'Размер queryset = {len(queryset)}')
+            if data.get('date'):
+                queryset = queryset.filter(date=datetime.strptime(data.get('date'), '%Y-%m-%d'))
                 logger.debug(f'Размер queryset = {len(queryset)}')
             self.queryset = queryset
         return self.list(request, *args, **kwargs)

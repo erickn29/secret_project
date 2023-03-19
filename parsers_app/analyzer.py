@@ -1,7 +1,9 @@
-from vacancies_app.models import StackTools
+from vacancies_app.models import StackTools, Language
 
 
 class Analyzer:
+
+    LANGUAGES = ['Python', 'PHP', 'С++', 'C#', 'JavaScript', 'Java', 'Golang', 'Swift', 'Kotlin', 'C']
 
     GRADES = {
         'Trainee': ['trainee', 'стажер', 'стажёр'],
@@ -62,6 +64,23 @@ class Analyzer:
         'Технический директор(CTO)': ('технический директор',),
         'Технический писатель': ('технический писатель',),
     }
+
+    @staticmethod
+    def get_language(title: str, text: str, stack: list = None):
+        for lang in Analyzer.LANGUAGES:
+            if lang in title:
+                obj = Language.objects.get_or_create(name=lang)[0]
+                return obj
+        if stack:
+            for lang in Analyzer.LANGUAGES:
+                if lang in stack:
+                    obj = Language.objects.get_or_create(name=lang)[0]
+                    return obj
+        for lang in Analyzer.LANGUAGES:
+            if lang in text:
+                obj = Language.objects.get_or_create(name=lang)[0]
+                return obj
+        return
 
     @staticmethod
     def get_speciality(title: str, text: str):

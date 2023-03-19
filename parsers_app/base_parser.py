@@ -65,7 +65,7 @@ class BaseParser:
     # @staticmethod
     def vacancies_to_db(self, vacancies_dict: dict):
         for vacancy in tqdm(vacancies_dict['vacancies']):
-            if not (set(vacancy.get('title').lower().split()) & set(self.STOP_WORDS)):
+            if vacancy and not (set(vacancy.get('title').lower().split()) & set(self.STOP_WORDS)):
                 try:
                     company_obj = Company.objects.get_or_create(
                         name=vacancy.get('company'),
@@ -83,6 +83,7 @@ class BaseParser:
                         experience=vacancy.get('experience'),
                         grade=vacancy.get('grade'),
                         link=vacancy.get('link'),
+                        language=Analyzer.get_language(vacancy.get('title'), vacancy.get('text'), vacancy.get('stack'))
                     )[0]
                     if vacancy.get('stack'):
                         for stack in vacancy.get('stack'):

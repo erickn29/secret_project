@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import DO_NOTHING
 
 
 class StackTools(models.Model):
@@ -9,13 +10,17 @@ class StackTools(models.Model):
         return self.name
 
 
+class Language(models.Model):
+    name = models.CharField(max_length=32)
+
+
 class Company(models.Model):
     name = models.CharField(max_length=128, default='МИАЦ')
     country = models.CharField(max_length=32, default='Россия', null=True)
     city = models.CharField(max_length=255, default='Москва', null=True)
 
     def __str__(self):
-        return f'Название: {self.name} / Город: {self.city}'
+        return f'{self.name} / Город: {self.city}'
 
 
 class Vacancy(models.Model):
@@ -30,7 +35,8 @@ class Vacancy(models.Model):
     grade = models.CharField(max_length=16, null=True)
     stack = models.ManyToManyField(StackTools)
     link = models.URLField(null=True)
-    date = models.DateTimeField(auto_now=True)
+    language = models.ForeignKey(Language, on_delete=models.DO_NOTHING, null=True)
+    date = models.DateField(auto_now=True)
 
     class META:
         unique_together = ('title', 'text', 'company')

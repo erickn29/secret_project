@@ -21,6 +21,7 @@ class VacancyListSerializer(serializers.HyperlinkedModelSerializer):
             'stack',
             'company',
             'date',
+            'link'
         ]
 
 
