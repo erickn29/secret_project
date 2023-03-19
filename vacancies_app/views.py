@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, JsonResponse
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from .vacancies_generator import vacancy_generator
@@ -46,6 +47,7 @@ class VacancyListViewSet(generics.ListCreateAPIView):
     # logger.error('error')
     queryset = Vacancy.objects.all()
     serializer_class = VacancyListSerializer
+    permission_classes = [IsAdminUser, ]
 
     def get(self, request, *args, **kwargs):
         if len(request.GET) > 0:
@@ -87,129 +89,150 @@ class VacancyListViewSet(generics.ListCreateAPIView):
 class VacancyViewSet(generics.RetrieveUpdateDestroyAPIView):
     queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class SpecialityListViewSet(generics.ListCreateAPIView):
     queryset = Vacancy.objects.distinct('speciality')
     serializer_class = SpecialitySerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class GradeListViewSet(generics.ListCreateAPIView):
     queryset = Vacancy.objects.distinct('grade')
     serializer_class = GradeSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class CityListViewSet(generics.ListCreateAPIView):
     queryset = Company.objects.distinct('city')
     serializer_class = CitySerializer
+    permission_classes = [IsAdminUser, ]
 
 
 @api_view(['GET'])
 def cities_list(request):
-    cities = list(Company.objects.distinct('city').values_list('city', flat=True))
-    return Response({'result': cities})
+    if request.user.is_superuser:
+        cities = list(Company.objects.distinct('city').values_list('city', flat=True))
+        return Response({'result': cities})
 
 
 @api_view(['GET'])
 def grades_list(request):
-    grades = list(Vacancy.objects.distinct('grade').values_list('grade', flat=True))
-    return Response({'result': grades})
+    if request.user.is_superuser:
+        grades = list(Vacancy.objects.distinct('grade').values_list('grade', flat=True))
+        return Response({'result': grades})
 
 
 @api_view(['GET'])
 def experiences_list(request):
-    experiences = list(Vacancy.objects.distinct('experience').values_list('experience', flat=True))
-    return Response({'result': experiences})
+    if request.user.is_superuser:
+        experiences = list(Vacancy.objects.distinct('experience').values_list('experience', flat=True))
+        return Response({'result': experiences})
 
 
 @api_view(['GET'])
 def specialities_list(request):
-    specialities = list(Vacancy.objects.distinct('speciality').values_list('speciality', flat=True))
-    return Response({'result': specialities})
+    if request.user.is_superuser:
+        specialities = list(Vacancy.objects.distinct('speciality').values_list('speciality', flat=True))
+        return Response({'result': specialities})
 
 
 @api_view(['GET'])
 def languages_list(request):
-    languages = ['Python', 'PHP', 'C', 'C++', 'C#', 'JavaScript', 'Java']
-    return Response({'result': languages})
+    if request.user.is_superuser:
+        languages = ['Python', 'PHP', 'C', 'C++', 'C#', 'JavaScript', 'Java']
+        return Response({'result': languages})
 
 
 class ExperienceListViewSet(generics.ListCreateAPIView):
     queryset = Vacancy.objects.distinct('experience')
     serializer_class = ExperienceSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class StackListViewSet(generics.ListCreateAPIView):
     queryset = StackTools.objects.all().order_by('-count')[:100]
     serializer_class = StackSerializer
+    permission_classes = [IsAdminUser, ]
 
 
-def fake_db(request, count):
-    vacancies = vacancy_generator(count)
-    for vacancy in vacancies:
-        company_obj = Company.objects.get_or_create(
-            name='МИАЦ',
-            country='Россия',
-            city='Архангельск',
-        )[0]
-        vacancy_obj = Vacancy.objects.get_or_create(
-            title=vacancy.get('title'),
-            text=vacancy.get('text'),
-            salary_from=vacancy.get('salary_from'),
-            salary_to=vacancy.get('salary_to'),
-            speciality=vacancy.get('speciality'),
-            experience=vacancy.get('experience'),
-            grade=vacancy.get('grade'),
-            company=company_obj,
-        )[0]
-        vacancy_obj.save()
-        for stack in vacancy['stack'].split(','):
-            stack_obj = StackTools.objects.get_or_create(
-                name=stack,
-            )[0]
-            stack_obj.save()
-            vacancy_obj.stack.add(stack_obj)
-    return HttpResponse('DONE!')
+# def fake_db(request, count):
+#     vacancies = vacancy_generator(count)
+#     for vacancy in vacancies:
+#         company_obj = Company.objects.get_or_create(
+#             name='МИАЦ',
+#             country='Россия',
+#             city='Архангельск',
+#         )[0]
+#         vacancy_obj = Vacancy.objects.get_or_create(
+#             title=vacancy.get('title'),
+#             text=vacancy.get('text'),
+#             salary_from=vacancy.get('salary_from'),
+#             salary_to=vacancy.get('salary_to'),
+#             speciality=vacancy.get('speciality'),
+#             experience=vacancy.get('experience'),
+#             grade=vacancy.get('grade'),
+#             company=company_obj,
+#         )[0]
+#         vacancy_obj.save()
+#         for stack in vacancy['stack'].split(','):
+#             stack_obj = StackTools.objects.get_or_create(
+#                 name=stack,
+#             )[0]
+#             stack_obj.save()
+#             vacancy_obj.stack.add(stack_obj)
+#     return HttpResponse('DONE!')
 
 
-def get_hh_vacancies(request, parser_token):
-    if parser_token == os.getenv('PARSER_TOKEN'):
-        obj = HhParser(BaseParser.HH_LINK)
-        vacancies = obj.get_vacancies()
-        obj.vacancies_to_db(vacancies)
-        return HttpResponse(str(vacancies))
-    else:
-        raise Http404
-
-
-def get_habr_vacancies(request, parser_token):
-    if parser_token == os.getenv('PARSER_TOKEN'):
-        obj = HabrParser(BaseParser.HABR_LINK)
-        vacancies = obj.get_vacancies()
-        obj.vacancies_to_db(vacancies)
-        return HttpResponse(str(vacancies))
-    else:
-        raise Http404
-
-
-def get_superjob_vacancies(request, parser_token):
-    if parser_token == os.getenv('PARSER_TOKEN'):
-        obj = SuperJobParser(BaseParser.SUPERJOBLINK)
-        vacancies = obj.get_vacancies()
-        obj.vacancies_to_db(vacancies)
-        return JsonResponse(vacancies)
-    else:
-        raise Http404
-
-
-def get_getmatch_vacancies(request, parser_token):
-    if parser_token == os.getenv('PARSER_TOKEN'):
-        obj = GetMatchParser(BaseParser.GETMATCH_LINK)
-        vacancies = obj.get_vacancies()
-        obj.vacancies_to_db(vacancies)
-        return JsonResponse(vacancies)
-    else:
-        raise Http404
+# def get_hh_vacancies(request, parser_token):
+#     if parser_token == os.getenv('PARSER_TOKEN'):
+#         obj = HhParser(BaseParser.HH_LINK)
+#         vacancies = obj.get_vacancies()
+#         obj.vacancies_to_db(vacancies)
+#         return HttpResponse(str(vacancies))
+#     else:
+#         raise Http404
+#
+#
+# def get_habr_vacancies(request, parser_token):
+#     if parser_token == os.getenv('PARSER_TOKEN'):
+#         obj = HabrParser(BaseParser.HABR_LINK)
+#         vacancies = obj.get_vacancies()
+#         obj.vacancies_to_db(vacancies)
+#         return HttpResponse(str(vacancies))
+#     else:
+#         raise Http404
+#
+#
+# def get_superjob_vacancies(request, parser_token):
+#     if parser_token == os.getenv('PARSER_TOKEN'):
+#         obj = SuperJobParser(BaseParser.SUPERJOBLINK)
+#         vacancies = obj.get_vacancies()
+#         obj.vacancies_to_db(vacancies)
+#         return JsonResponse(vacancies)
+#     else:
+#         raise Http404
+#
+#
+# def get_getmatch_vacancies(request, parser_token):
+#     if parser_token == os.getenv('PARSER_TOKEN'):
+#         obj = GetMatchParser(BaseParser.GETMATCH_LINK)
+#         vacancies = obj.get_vacancies()
+#         obj.vacancies_to_db(vacancies)
+#         return JsonResponse(vacancies)
+#     else:
+#         raise Http404
+#
+#
+# def get_proglib_vacancies(request, parser_token):
+#     if parser_token == os.getenv('PARSER_TOKEN'):
+#         obj = GetMatchParser(BaseParser.GETMATCH_LINK)
+#         vacancies = obj.get_vacancies()
+#         obj.vacancies_to_db(vacancies)
+#         return JsonResponse(vacancies)
+#     else:
+#         raise Http404
 
 
 def test(request):

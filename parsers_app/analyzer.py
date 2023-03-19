@@ -98,7 +98,7 @@ class Analyzer:
     def get_superjob_experience(text: str):
         for k, v in Analyzer.SUPERJOB_EXPERIENCE.items():
             if k in text:
-                return k
+                return v
         return
 
     @staticmethod
@@ -117,7 +117,6 @@ class Analyzer:
         for stack in stack_values:
             if stack.lower() in cleaned_text and len(stack) > 1 and stack not in stack_list:
                 stack_list.append(stack)
-                print(f'Find stack in superjob vacancy [{stack}]')
         return stack_list
 
     @staticmethod

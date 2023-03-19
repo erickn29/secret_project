@@ -32,5 +32,8 @@ class Vacancy(models.Model):
     link = models.URLField(null=True)
     date = models.DateTimeField(auto_now=True)
 
+    class META:
+        unique_together = ('title', 'text', 'company')
+
     def __str__(self):
         return self.title
