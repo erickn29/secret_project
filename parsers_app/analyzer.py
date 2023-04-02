@@ -1,9 +1,11 @@
+from bs4 import BeautifulSoup
+
 from vacancies_app.models import StackTools, Language
 
 
 class Analyzer:
 
-    LANGUAGES = ['Python', 'PHP', 'С++', 'C#', 'JavaScript', 'Java', 'Golang', 'Swift', 'Kotlin', 'C']
+    LANGUAGES = ['Python', 'PHP', 'С++', 'C#', 'JavaScript', 'Java', 'Golang', 'Swift', 'Kotlin', 'Rust']
 
     GRADES = {
         'Trainee': ['trainee', 'стажер', 'стажёр'],
@@ -64,6 +66,18 @@ class Analyzer:
         'Технический директор(CTO)': ('технический директор',),
         'Технический писатель': ('технический писатель',),
     }
+
+    @staticmethod
+    def html_to_text(html: BeautifulSoup) -> str:
+        new_text = ''
+        for e in html.descendants:
+            if isinstance(e, str):
+                new_text += e
+            elif e.name in ['br', 'p', 'h1', 'h2', 'h3', 'h4', 'tr', 'th']:
+                new_text += '\n'
+            elif e.name == 'li':
+                new_text += '\n- '
+        return new_text
 
     @staticmethod
     def get_language(title: str, text: str, stack: list = None):

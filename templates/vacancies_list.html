@@ -1,0 +1,39 @@
+{% for vacancy in vacancies %}
+    <div class='vacancy-preview'>
+        <div class="vacancy-title">{{ vacancy.title }}</div>
+        <div class="vacancy-salary">
+            {% if vacancy.salary_from %}
+                <div class="vacancy-salary-from">от {{ vacancy.salary_from }} руб.</div>
+            {% endif %}
+            {% if vacancy.salary_to %}
+                <div class="vacancy-salary-to">до {{ vacancy.salary_to }} руб.</div>
+            {% endif %}
+        </div>
+        <div class="company">
+            Работодатель: {{ vacancy.company.name }}
+        </div>
+        {% if vacancy.company.city %}
+            <div class="location">
+                Локация: {{ vacancy.company.city|split_city }}
+            </div>
+        {% endif %}
+        <div class="vacancy-experience">
+            Опыт: {{ vacancy.experience }}
+        </div>
+        <div class="vacancy-stack">
+            Инструменты: {% for stack in vacancy.stack.all %} [{{stack.name}}] {% endfor %}
+        </div>
+        <div class="is-remote">
+            Удаленка: {% if vacancy.is_remote %} Да {% else %} Нет {% endif %}
+        </div>
+        <div class="post-date">
+            Размещено: {{ vacancy.date|date:'d.m.Y' }}
+        </div>
+        <div class="update-date">
+            Обновлено: {{ vacancy.update|date:'d.m.Y' }}
+        </div>
+        <div class="vacancy-link">
+            <a href="{{ vacancy.link|split_link }}">Источник</a>
+        </div>
+    </div><br>
+{% endfor %}

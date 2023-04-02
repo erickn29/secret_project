@@ -1,3 +1,5 @@
+import datetime
+
 from requests import request
 from tqdm import tqdm
 from vacancies_app.models import *
@@ -19,7 +21,7 @@ class BaseParser:
     SUPERJOBLINK = 'https://russia.superjob.ru/vacancy/search/?keywords=c%23%2Cpython%2Cjavascript%2Cphp%2Cc%2B%2B%2Cjava&payment_value=20000&period=1&payment_defined=1&click_from=facet'
     GETMATCH_LINK = 'https://getmatch.ru/vacancies?sa=150000&l=moscow&l=remote&l=saints_p&pa=1d&s=landing_ca_header'
     PROGLIB_LINK = 'https://proglib.io/vacancies/all?direction=Programming&workType=fulltime&workPlace=all&experience=100&salaryFrom=500&page=1'
-    STOP_WORDS = ('машинист', 'водитель', 'таксист', 'курьер', 'охранник', 'поддержки', 'оператор', 'поддержка', 'маркетолог')
+    STOP_WORDS = ('машинист', 'водитель', 'таксист', 'курьер', 'охранник', 'поддержки', 'поддержку', 'оператор', 'поддержка', 'маркетолог', 'онлайн-поддержки', 'менеджер')
 
     def __init__(self, url: str):
         self.url = url
@@ -72,7 +74,7 @@ class BaseParser:
                         country='Россия',
                         city=vacancy.get('company_address'),
                     )[0]
-                    vacancy_obj = Vacancy.objects.get_or_create(
+                    vacancy_obj = Vacancy.objects.update_or_create(
                         title=vacancy.get('title'),
                         text=vacancy.get('text'),
                         company=company_obj,
@@ -83,7 +85,11 @@ class BaseParser:
                         experience=vacancy.get('experience'),
                         grade=vacancy.get('grade'),
                         link=vacancy.get('link'),
-                        language=Analyzer.get_language(vacancy.get('title'), vacancy.get('text'), vacancy.get('stack'))
+                        language=Analyzer.get_language(vacancy.get('title'), vacancy.get('text'), vacancy.get('stack')),
+                        # date=datetime.date.today(),
+                        defaults={
+                            'update': datetime.date.today(),
+                        }
                     )[0]
                     if vacancy.get('stack'):
                         for stack in vacancy.get('stack'):

@@ -37,9 +37,12 @@ class Vacancy(models.Model):
     link = models.URLField(null=True)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now=True)
+    update = models.DateField(null=True)
 
-    class META:
-        unique_together = ('title', 'text', 'company')
+    class Meta:
+        indexes = [
+            models.Index(fields=['salary_from', 'salary_to', 'speciality', 'date']),
+        ]
 
     def __str__(self):
         return self.title

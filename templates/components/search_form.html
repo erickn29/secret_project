@@ -1,0 +1,39 @@
+<form action="/vacancies" method="get">
+    <select name="speciality">
+        <option value=''>Не важно</option>
+        {% for speciality in specialities %}
+            <option value='{{ speciality }}'>{{ speciality }}</option>
+        {% endfor %}
+    </select>
+    <select name="city">
+        <option value=''>Не важно</option>
+        {% for city in cities %}
+            <option value='{{ city }}'>{{ city }}</option>
+        {% endfor %}
+    </select>
+    <select name="grade">
+        <option value=''>Не важно</option>
+        {% for grade in grades %}
+            <option value='{{ grade }}'>{{ grade }}</option>
+        {% endfor %}
+    </select>
+    <select name="experience">
+        <option value=''>Не важно</option>
+        {% for experience in experiences %}
+            <option value='{{ experience }}'>{{ experience }}</option>
+        {% endfor %}
+    </select>
+    <select name="language">
+        <option value=''>Не важно</option>
+        {% for language in languages %}
+            <option value='{{ language }}'>{{ language }}</option>
+        {% endfor %}
+    </select>
+    <label for="is_remote">Можно удаленно</label>
+    <input type="checkbox" id="is_remote" name="is_remote" value="True">
+    <label for="salary_from">Зарплата от</label>
+    <input type="number" id="salary_from" name="salary_from">
+
+    <button type="submit">Искать</button>
+</form>
+

@@ -88,6 +88,7 @@ class HhParser(BaseParser):
             salary_to = None
             experience = None
             text = None
+            new_text = ''
             stack = None
             company = None
             company_address = None
@@ -113,7 +114,8 @@ class HhParser(BaseParser):
             if soup.find('span', {'data-qa': "vacancy-experience"}):
                 experience = Analyzer.get_experience(self.string_cleaner(soup.find('span', {'data-qa': "vacancy-experience"}).text))
             if soup.find('div', {'class': "vacancy-section"}):
-                text = self.string_cleaner(soup.find('div', {'class': "vacancy-section"}).text)
+                text = soup.find('div', {'class': "vacancy-description"})
+                new_text = Analyzer.html_to_text(text)
             if soup.find('div', {'class': "bloko-tag-list"}):
                 stack_not_clear = soup.find_all('div', {'class': "bloko-tag bloko-tag_inline"})
                 stack = [i.text for i in stack_not_clear]
@@ -125,7 +127,7 @@ class HhParser(BaseParser):
                 if 'удаленная работа' in self.string_cleaner(soup.find('p', {'data-qa': "vacancy-view-employment-mode"}).text).lower():
                     is_remote = True
             vacancy = {}
-            grade = Analyzer.get_grade(title, text)
+            grade = Analyzer.get_grade(title, new_text)
             vacancy.update({
                 'title': title,
                 'salary_from': salary_from,
@@ -133,7 +135,7 @@ class HhParser(BaseParser):
                 'is_remote': is_remote,
                 'experience': experience,
                 'grade': grade,
-                'text': text,
+                'text': new_text,
                 'stack': stack,
                 'company': company,
                 'company_address': company_address,
@@ -154,7 +156,7 @@ class HhParser(BaseParser):
             vacancy_page = self._get_vacancy_page(link)
             vacancy_data = self._get_vacancy_data(vacancy_page, link)
             vacancy_dict['vacancies'].append(vacancy_data)
-            time.sleep(random.randint(2, 5))
+            time.sleep(random.randint(1, 2))
         if wright_to_file:
             with open(f'vacancies_hh_{datetime.datetime.now().strftime("%d_%m_%Y")}.json', 'w', encoding='utf-8') as f:
                 f.write(json.dumps(vacancy_dict))

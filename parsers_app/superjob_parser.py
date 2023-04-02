@@ -70,13 +70,14 @@ class SuperJobParser(BaseParser):
             salary_to = data.get('baseSalary').get('value').get('maxValue')
             exp_obj = soup.select_one('.f-test-address').nextSibling
             experience = Analyzer.get_superjob_experience(exp_obj.text)
-            text = data.get('description')
-            stack = Analyzer.get_stack_raw_text(text)
+            text = bs(data.get('description'), 'html.parser')
+            new_text = Analyzer.html_to_text(text)
+            stack = Analyzer.get_stack_raw_text(new_text)
             company = data.get('hiringOrganization').get('name')
             company_address = data.get('jobLocation').get('address').get('addressLocality')
             is_remote = True if data.get('jobLocationType') == 'TELECOMMUTE' else False
             vacancy = {}
-            grade = Analyzer.get_grade(title, text)
+            grade = Analyzer.get_grade(title, new_text)
             vacancy.update({
                 'title': title,
                 'salary_from': salary_from,
@@ -84,7 +85,7 @@ class SuperJobParser(BaseParser):
                 'is_remote': is_remote,
                 'experience': experience,
                 'grade': grade,
-                'text': text,
+                'text': new_text,
                 'stack': stack,
                 'company': company,
                 'company_address': company_address,

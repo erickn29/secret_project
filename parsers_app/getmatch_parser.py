@@ -83,7 +83,8 @@ class GetMatchParser(BaseParser):
 
             exp_obj = soup.find('div', text='Уровень').nextSibling.text
             experience = Analyzer.get_getmatch_experience(exp_obj)
-            text = str(soup.find('section', {'class': 'b-vacancy-description'}))
+            text = soup.find('section', {'class': 'b-vacancy-description'})
+            new_text = Analyzer.html_to_text(text)
             stack_obj = bs(str(soup.find('div', {'class': 'b-vacancy-stack-container'})), 'html.parser')
             stack_tags = stack_obj.find_all('span', {'class': 'g-label'})
             stack_list = []
@@ -102,7 +103,7 @@ class GetMatchParser(BaseParser):
                 'is_remote': is_remote,
                 'experience': experience,
                 'grade': grade,
-                'text': text,
+                'text': new_text,
                 'stack': stack,
                 'company': company,
                 'company_address': company_address,
