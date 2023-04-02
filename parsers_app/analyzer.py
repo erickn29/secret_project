@@ -5,7 +5,7 @@ from vacancies_app.models import StackTools, Language
 
 class Analyzer:
 
-    LANGUAGES = ['Python', 'PHP', 'С++', 'C#', 'JavaScript', 'Java', 'Golang', 'Swift', 'Kotlin', 'Rust']
+    LANGUAGES = ['Python', 'PHP', 'C++', 'C#', 'JavaScript', 'Java', 'Golang', 'Swift', 'Kotlin', 'Rust']
 
     GRADES = {
         'Trainee': ['trainee', 'стажер', 'стажёр'],

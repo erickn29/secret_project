@@ -28,5 +28,5 @@ def specialities_list():
 
 
 def languages_list():
-    languages = ['Python', 'PHP', 'C', 'C++', 'C#', 'JavaScript', 'Java']
+    languages = list(Language.objects.distinct('name').values_list('name', flat=True).exclude(name__isnull=True))
     return languages

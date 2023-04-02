@@ -13,6 +13,9 @@ class StackTools(models.Model):
 class Language(models.Model):
     name = models.CharField(max_length=32)
 
+    class META:
+        db_table = 'vacancies_app_language'
+
 
 class Company(models.Model):
     name = models.CharField(max_length=128, default='МИАЦ')

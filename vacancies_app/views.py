@@ -58,7 +58,7 @@ class VacanciesList(ListView):
             if data.get('date'):
                 queryset = queryset.filter(date=datetime.strptime(data.get('date'), '%Y-%m-%d'))
                 # logger.debug(f'Размер queryset = {len(queryset)}')
-        return queryset
+        return queryset.order_by('-date')
 
 
 @register.filter(name='split_link')
