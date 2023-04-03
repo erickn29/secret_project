@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 node_modules/
 .idea/
+**migrations**
 
 # C extensions
 *.so

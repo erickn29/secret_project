@@ -1,5 +1,5 @@
 {% for vacancy in vacancies %}
-    <div class='vacancy-preview'>
+    <div class='vacancy-preview my-5'>
         <div class="vacancy-title">{{ vacancy.title }}</div>
         <div class="vacancy-salary">
             {% if vacancy.salary_from %}
@@ -35,5 +35,5 @@
         <div class="vacancy-link">
             <a href="{{ vacancy.link|split_link }}">Источник</a>
         </div>
-    </div><br>
+    </div>
 {% endfor %}
