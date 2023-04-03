@@ -1,10 +1,17 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html class="bg-dark" lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
     <title>Title</title>
 </head>
 <body>
+    <h1 class="text-3xl font-bold underline">
+        Привет мир!
+    </h1>
     {% include 'components/search_form.html' %}
 
     {% include 'vacancies_list.html' %}
