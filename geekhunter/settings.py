@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.31.233']
 
 
 # Application definition
@@ -128,6 +128,14 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 
 USE_TZ = True
+
+USE_L10N = True
+
+# USE_THOUSAND_SEPARATOR = True
+#
+# THOUSAND_SEPARATOR = '='
+#
+# NUMBER_GROUPING = 2
 
 
 # Static files (CSS, JavaScript, Images)

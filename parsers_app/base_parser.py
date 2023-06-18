@@ -44,7 +44,7 @@ class BaseParser:
 
     @staticmethod
     def string_cleaner(string: str):
-        return string.strip().replace('  ', '').replace('\n', ' ').replace('\t', '').replace('\xa0', ' ')
+        return string.strip().replace('  ', '').replace('\n', ' ').replace('\t', '').replace('\xa0', ' ').replace('город ', '').replace('деревня ', '').replace('г. ', '')
 
     @staticmethod
     def text_cleaner(string: str):

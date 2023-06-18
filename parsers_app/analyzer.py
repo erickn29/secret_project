@@ -82,7 +82,7 @@ class Analyzer:
     @staticmethod
     def get_language(title: str, text: str, stack: list = None):
         for lang in Analyzer.LANGUAGES:
-            if lang in title:
+            if lang in title.replace('С#', 'C#').replace('С++', 'C++').replace('Frontend', 'JavaScript').replace('JAVA', 'Java'):
                 obj = Language.objects.get_or_create(name=lang)[0]
                 return obj
         if stack:

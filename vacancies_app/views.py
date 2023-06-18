@@ -6,19 +6,32 @@ from django.views.generic import View, TemplateView, ListView, DetailView, FormV
 from django.shortcuts import render, redirect
 from .models import Vacancy, Language, Company
 from .crud import *
+from .forms import SearchForm
 
 
 class VacanciesList(ListView):
     model = Vacancy
     template_name = 'base.html'
     context_object_name = 'vacancies'
-    extra_context = {
-        'cities': cities_list(),
-        'specialities': specialities_list(),
-        'grades': grades_list(),
-        'experiences': experiences_list(),
-        'languages': languages_list(),
-    }
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = SearchForm()
+        # form.fields['cities'].initial = form.fields['cities'].choices[10]
+        # form.fields['cities'].initial = ('Москва', 'Москва')
+        form.fields['cities'].initial = (self.request.GET.get('location'), self.request.GET.get('location'))
+        form.fields['specialities'].initial = (self.request.GET.get('speciality'), self.request.GET.get('speciality'))
+        form.fields['grades'].initial = (self.request.GET.get('grade'), self.request.GET.get('grade'))
+        form.fields['experiences'].initial = (self.request.GET.get('experience'), self.request.GET.get('experience'))
+        form.fields['languages'].initial = (self.request.GET.get('language'), self.request.GET.get('language'))
+        form.fields['salary_from'].initial = self.request.GET.get('salary_from')
+        form.fields['is_remote'].initial = 'on' if self.request.GET.get('is_remote') else ''
+        # for k, v in self.request.GET.items():
+        #     initial[k] = v
+        context['form'] = form
+        context['result'] = len(self.queryset) if self.queryset else len(self.get_queryset())
+        return context
 
     def get_queryset(self):
         start_date = datetime.now().date() - timedelta(days=30)
@@ -40,7 +53,7 @@ class VacanciesList(ListView):
                 queryset = queryset.filter(company__city__icontains=location)
                 # logger.debug(f'Размер queryset = {len(queryset)}')
             if data.get('is_remote'):
-                is_remote = data.get('is_remote')
+                is_remote = True if data.get('is_remote') == 'on' else False
                 queryset = queryset.filter(is_remote=is_remote)
                 # logger.debug(f'Размер queryset = {len(queryset)}')
             if data.get('experience'):
@@ -58,6 +71,7 @@ class VacanciesList(ListView):
             if data.get('date'):
                 queryset = queryset.filter(date=datetime.strptime(data.get('date'), '%Y-%m-%d'))
                 # logger.debug(f'Размер queryset = {len(queryset)}')
+            self.queryset = queryset
         return queryset.order_by('-date')
 
 
@@ -71,17 +85,37 @@ def split_city(value):
     return value.split(',')[0]
 
 
+@register.filter(name='del_comma')
+def del_comma(value):
+    if value:
+        if value > 999:
+            return str(value // 1000) + ' ' + str(value)[len(str(value // 1000)):]
+    return value
+
+
 class VacancyDetail(DetailView):
     model = Vacancy
     template_name = 'vacancy.html'
     context_object_name = 'vacancy'
 
 
-class FilterView(TemplateView):
-    template_name = 'components/search_form.html'
-    extra_context = {
-        'cities': cities_list(),
-    }
+# class FilterView(FormView):
+#     template_name = 'components/search_form.html'
+#     form_class = SearchForm
+#     success_url = '/vacancies/'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(FilterView, self).get_context_data(**kwargs)
+#         context['test'] = 'self.form_class'
+#         return context
 
-    # def get_context_data(self, **kwargs):
+    # def get_initial(self):
+    #     initial = super().get_initial()
+    #     for k, v in self.request.GET.items():
+    #         initial[k] = v
+    #     return initial
+    #
+    # def get(self, request, *args, **kwargs):
+    #     pass
+
 

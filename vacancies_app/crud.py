@@ -1,8 +1,15 @@
+from datetime import datetime, timedelta
+
 from .models import Vacancy, Language, Company
 
 
 def cities_list():
-    cities_raw: list[str] = list(Company.objects.distinct('city').values_list('city', flat=True))
+    start_date = datetime.now().date() - timedelta(days=30)
+    end_date = datetime.now().date()
+    vacancy = Vacancy.objects.filter(date__range=[start_date, end_date])
+    company_ids = list(vacancy.values_list('company_id', flat=True))
+    companies = Company.objects.filter(id__in=company_ids)
+    cities_raw: list[str] = list(companies.filter().distinct('city').values_list('city', flat=True))
     cities = []
     for city in cities_raw:
         if city:

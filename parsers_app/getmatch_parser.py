@@ -58,62 +58,68 @@ class GetMatchParser(BaseParser):
 
     def _get_vacancy_data(self, page: str, link: str):
         """Получаем информацию по вакансии"""
-        soup = bs(page, 'html.parser')
-        try:
-            title = soup.find('h1').text
-            salary_string = soup.find_all('h3')[0].text
-            salary_from = None
-            salary_to = None
-            if '—' in salary_string:
-                salary_list = salary_string.split('—')
-                salary_from = int(salary_list[0].replace(' ', ''))
-                salary_to = int(salary_list[1].replace('₽/мес на руки', '').replace('$/мес на руки', '').replace('€/мес на руки', ''). replace(' ', '').replace('\u200d', ''))
-                if '$' in salary_string or '€' in salary_string:
-                    salary_from = salary_from * 75
-                    salary_to = salary_to * 75
-            if 'от' in salary_string:
-                salary_string = salary_string.replace(' ', '')
-                number = ''
-                for c in salary_string:
-                    if c.isdigit():
-                        number += c
-                salary_from = int(number)
-                if '$' in salary_string or '€' in salary_string:
-                    salary_from = int(number) * 75
+        if page:
+            try:
+                soup = bs(page, 'html.parser')
+                title = soup.find('h1').text
+                salary_string = soup.find_all('h3')[0].text
+                salary_from = None
+                salary_to = None
+                if '—' in salary_string:
+                    salary_list = salary_string.split('—')
+                    salary_from = int(salary_list[0].replace(' ', ''))
+                    salary_to = int(salary_list[1].replace('₽/мес на руки', '').replace('$/мес на руки', '').replace('€/мес на руки', ''). replace(' ', '').replace('\u200d', ''))
+                    if '$' in salary_string or '€' in salary_string:
+                        salary_from = salary_from * 75
+                        salary_to = salary_to * 75
+                if 'от' in salary_string:
+                    salary_string = salary_string.replace(' ', '')
+                    number = ''
+                    for c in salary_string:
+                        if c.isdigit():
+                            number += c
+                    salary_from = int(number)
+                    if '$' in salary_string or '€' in salary_string:
+                        salary_from = int(number) * 75
 
-            exp_obj = soup.find('div', text='Уровень').nextSibling.text
-            experience = Analyzer.get_getmatch_experience(exp_obj)
-            text = soup.find('section', {'class': 'b-vacancy-description'})
-            new_text = Analyzer.html_to_text(text)
-            stack_obj = bs(str(soup.find('div', {'class': 'b-vacancy-stack-container'})), 'html.parser')
-            stack_tags = stack_obj.find_all('span', {'class': 'g-label'})
-            stack_list = []
-            for obj in stack_tags:
-                stack_list.append(obj.text)
-            stack = stack_list
-            company = soup.find_all('h2')[0].text.replace('в ', '')
-            company_address = soup.find('span', {'class': 'b-address-title'}).text.split(',')[0]
-            is_remote = True if 'Remote' in soup.find('section', {'class': 'b-location'}).text else False
-            grade = soup.find('div', text='Уровень').nextSibling.text
-            vacancy = {}
-            vacancy.update({
-                'title': title,
-                'salary_from': salary_from,
-                'salary_to': salary_to,
-                'is_remote': is_remote,
-                'experience': experience,
-                'grade': grade,
-                'text': new_text,
-                'stack': stack,
-                'company': company,
-                'company_address': company_address,
-                'date': datetime.datetime.now().strftime('%Y-%m-%d'),
-                'link': link
-            })
-            time.sleep(1)
-            return vacancy
-        except Exception as e:
-            print(e)
+                exp_obj = soup.find('div', text='Уровень').nextSibling.text
+                experience = Analyzer.get_getmatch_experience(exp_obj)
+                text = soup.find('section', {'class': 'b-vacancy-description'})
+                new_text = Analyzer.html_to_text(text)
+                stack_obj = bs(str(soup.find('div', {'class': 'b-vacancy-stack-container'})), 'html.parser')
+                stack_tags = stack_obj.find_all('span', {'class': 'g-label'})
+                stack_list = []
+                for obj in stack_tags:
+                    stack_list.append(obj.text)
+                stack = stack_list
+                company = soup.find_all('h2')[0].text.replace('в ', '')
+                company_address = None
+                if soup.find('span', {'class': 'b-vacancy-locations--first'}):
+                    company_address = soup.find('span', {'class': 'b-vacancy-locations--first'}).text.replace('\"', '').replace('📍 ', '')
+                is_remote = True if 'Полная удалёнка' in soup.text else False
+                grade = None
+                if soup.find('div', text='Уровень').nextSibling:
+                    grade = soup.find('div', text='Уровень').nextSibling.text
+                vacancy = {}
+                vacancy.update({
+                    'title': title,
+                    'salary_from': salary_from,
+                    'salary_to': salary_to,
+                    'is_remote': is_remote,
+                    'experience': experience,
+                    'grade': grade,
+                    'text': new_text,
+                    'stack': stack,
+                    'company': company,
+                    'company_address': company_address,
+                    'date': datetime.datetime.now().strftime('%Y-%m-%d'),
+                    'link': link
+                })
+                time.sleep(1)
+                return vacancy
+            except Exception as e:
+                print(e, link)
+        return
 
     def get_vacancies(self, wright_to_file: bool = True) -> dict:
         # ftc

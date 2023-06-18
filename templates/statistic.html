@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<script src="{% static 'highcharts/highstock.js' %}"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block left-menu %}
+LEFT-MENU
+{% endblock %}
+
+{% block main-content %}
+
+<div id="container-langs" style="width:100%; height:400px;">
+    <input type="hidden" id="langs" value="{{ langs }}">
+    <canvas id="langs-chart"></canvas>
+    <script>
+        const languageDynamicChart = document.getElementById('langs-chart');
+        const languageData = JSON.parse(document.getElementById('langs').value)
+
+        let languageDates = Object.keys(languageData)
+        let python_ = []
+        let javaScript_ = []
+        let csharp_ = []
+        let php_ = []
+        let data_sets = []
+
+        for (let i = 0; i < languageDates.length; i++) {
+            python_.push(Object.values(languageData)[i].Python)
+            javaScript_.push(Object.values(languageData)[i].JavaScript)
+            csharp_.push(Object.values(languageData)[i].Csharp)
+            php_.push(Object.values(languageData)[i].php)
+        }
+
+        const lastValues = Object.values(languageData)[Object.values(languageData).length - 1]
+        const lastValuesSorted = Object.keys(lastValues).sort(function (a, b) { return lastValues[a] - lastValues[b] })
+
+        const pythonDataSet = {
+            innerName: 'Python',
+            tension: 0.3,
+            fill: true,
+            backgroundColor: '#4cceac',
+            label: 'Python',
+            data: python_,
+            borderWidth: 1,
+            pointStyle: false
+        }
+        const javaScriptDataSet = {
+            innerName: 'JavaScript',
+            tension: 0.3,
+            fill: true,
+            backgroundColor: '#ff6f59',
+            label: 'JavaScript',
+            data: javaScript_,
+            borderWidth: 1,
+            pointStyle: false
+        }
+        const phpDataSet = {
+            innerName: 'php',
+            tension: 0.3,
+            fill: true,
+            backgroundColor: '#007bff',
+            label: 'PHP',
+            data: php_,
+            borderWidth: 1,
+            pointStyle: false
+        }
+        const csharpDataSet = {
+            innerName: 'Csharp',
+            tension: 0.3,
+            fill: true,
+            backgroundColor: '#6f42c1',
+            label: 'C#',
+            data: csharp_,
+            borderWidth: 1,
+            pointStyle: false
+        }
+
+        const list = [pythonDataSet, javaScriptDataSet, phpDataSet, csharpDataSet]
+
+        for (let i = 0; i < lastValuesSorted.length; i++) {
+            for (let j = 0; j < list.length; j++) {
+                if (lastValuesSorted[i] == list[j].innerName) {
+                    data_sets.push(list[j])
+                }
+            }
+        }
+
+        let langsChart = new Chart(languageDynamicChart, {
+            type: 'line',
+            data: {
+                labels: languageDates,
+                datasets: data_sets,
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Динамика популярности языков программирования на основе статистики открытых вакансий'
+                    },
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
+                        }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
+                        }
+                    },
+                }
+            }
+        });
+    </script>
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let data = JSON.parse(document.getElementById("langs").value)
+            let data_values = Object.values(data)
+            let date = new Date(Object.keys(data)[0])
+            var start_date = date.getTime()
+            let python = []
+            let js = []
+            let cs = []
+            let php = []
+            for (let i = 0; i < data_values.length; i++) {
+                python.push(data_values[i].Python)
+                js.push(data_values[i].JavaScript)
+                cs.push(data_values[i].Csharp)
+                php.push(data_values[i].php)
+            }
+            Highcharts.stockChart('container-langs', {
+                rangeSelector: {
+                    selected: 1
+                },
+
+                title: {
+                    text: 'Количество новых вакансий в разрезе языков программирования'
+                },
+
+                series: [
+                    {
+                        name: 'Python',
+                        pointStart: start_date,
+                        pointInterval: 86400 * 1000,
+                        data: python,
+                        tooltip: {
+                            // valueDecimals: 0
+                        }
+                    },
+                    {
+                        name: 'JavaScript',
+                        pointStart: start_date,
+                        pointInterval: 86400 * 1000,
+                        data: js,
+                        tooltip: {
+                            // valueDecimals: 0
+                        }
+                    },
+                    {
+                        name: 'C#',
+                        pointStart: start_date,
+                        pointInterval: 86400 * 1000,
+                        data: cs,
+                        tooltip: {
+                            // valueDecimals: 0
+                        }
+                    },
+                    {
+                        name: 'PHP',
+                        pointStart: start_date,
+                        pointInterval: 86400 * 1000,
+                        data: php,
+                        tooltip: {
+                            // valueDecimals: 0
+                        }
+                    },
+                ]
+            });
+        });
+    </script> -->
+</div>
+
+{% endblock %}

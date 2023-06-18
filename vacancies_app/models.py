@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import DO_NOTHING
+from django.db.models import DO_NOTHING, UniqueConstraint
 
 
 class StackTools(models.Model):
@@ -46,6 +46,7 @@ class Vacancy(models.Model):
         indexes = [
             models.Index(fields=['salary_from', 'salary_to', 'speciality', 'date']),
         ]
+        UniqueConstraint(fields=['title', 'text', 'salary_from', 'salary_to', ], name='unique_vacancy')
 
     def __str__(self):
         return self.title

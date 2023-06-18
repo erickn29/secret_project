@@ -1,39 +1,44 @@
+{% load l10n %}
+{% load  %}
 {% for vacancy in vacancies %}
-    <div class='vacancy-preview my-5'>
-        <div class="vacancy-title">{{ vacancy.title }}</div>
+    <div class='vacancy-preview my-4'>
+        <div class="vacancy-title"><h2>{{ vacancy.title }}</h2></div>
         <div class="vacancy-salary">
-            {% if vacancy.salary_from %}
-                <div class="vacancy-salary-from">от {{ vacancy.salary_from }} руб.</div>
-            {% endif %}
-            {% if vacancy.salary_to %}
-                <div class="vacancy-salary-to">до {{ vacancy.salary_to }} руб.</div>
-            {% endif %}
+            <div class="row">
+                {% if vacancy.salary_from %}
+                    {% if vacancy.salary_to %}
+                        <div class="vacancy-salary-to"><h4>от <span class="salary-text">{{ vacancy.salary_from|del_comma }} руб.</span> до <span class="salary-text">{{ vacancy.salary_to|del_comma }} руб.</span></h4></div>
+                    {% else %}
+                        <div class="vacancy-salary-from"><h4><span class="salary-text">от {{ vacancy.salary_from|del_comma }} руб.</span></h4></div>
+                    {% endif %}
+                {% else %}
+                    <div class="vacancy-salary-to"><h4><span class="salary-text">до {{ vacancy.salary_to|del_comma }} руб.</span></h4></div>
+                {% endif %}
+            </div>
+            
+        </div>
+        <div class="vacancy-experience">
+            <h5>Опыт: {{ vacancy.experience }}</h5>
+        </div>
+        <div class="vacancy-stack">
+            {% for stack in vacancy.stack.all %}<span style="margin-right: 3px;" class="badge bg-warning text-dark">{{stack.name}}</span>{% endfor %}
         </div>
         <div class="company">
-            Работодатель: {{ vacancy.company.name }}
+            <i class="bi bi-buildings"></i>&nbsp;{{ vacancy.company.name }}
         </div>
         {% if vacancy.company.city %}
             <div class="location">
-                Локация: {{ vacancy.company.city|split_city }}
+                <i class="bi bi-geo-alt"></i>&nbsp;{{ vacancy.company.city|split_city }}
             </div>
         {% endif %}
-        <div class="vacancy-experience">
-            Опыт: {{ vacancy.experience }}
-        </div>
-        <div class="vacancy-stack">
-            Инструменты: {% for stack in vacancy.stack.all %} [{{stack.name}}] {% endfor %}
-        </div>
         <div class="is-remote">
-            Удаленка: {% if vacancy.is_remote %} Да {% else %} Нет {% endif %}
+            {% if vacancy.is_remote %}<i class="bi bi-house-check"></i>&nbsp;Возможна удаленная работа {% endif %}
         </div>
         <div class="post-date">
-            Размещено: {{ vacancy.date|date:'d.m.Y' }}
+            <i class="bi bi-calendar3"></i>&nbsp;{{ vacancy.date|date:'d.m.Y' }}
         </div>
-        <div class="update-date">
-            Обновлено: {{ vacancy.update|date:'d.m.Y' }}
-        </div>
-        <div class="vacancy-link">
-            <a href="{{ vacancy.link|split_link }}">Источник</a>
+        <div class="vacancy-link mt-1">
+            <a target="_blank" href="{{ vacancy.link|split_link }}"><button class="btn btn-primary btn-sm">Источник <i class="bi bi-arrow-up-right-circle"></i></button></a>
         </div>
     </div>
 {% endfor %}

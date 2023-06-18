@@ -1,39 +1,72 @@
-<form action="/vacancies" method="get">
-    <select name="speciality">
-        <option value=''>Не важно</option>
-        {% for speciality in specialities %}
-            <option value='{{ speciality }}'>{{ speciality }}</option>
-        {% endfor %}
-    </select>
-    <select name="location">
-        <option value=''>Не важно</option>
-        {% for city in cities %}
-            <option value='{{ city }}'>{{ city }}</option>
-        {% endfor %}
-    </select>
-    <select name="grade">
-        <option value=''>Не важно</option>
-        {% for grade in grades %}
-            <option value='{{ grade }}'>{{ grade }}</option>
-        {% endfor %}
-    </select>
-    <select name="experience">
-        <option value=''>Не важно</option>
-        {% for experience in experiences %}
-            <option value='{{ experience }}'>{{ experience }}</option>
-        {% endfor %}
-    </select>
-    <select name="language">
-        <option value=''>Не важно</option>
-        {% for language in languages %}
-            <option value='{{ language }}'>{{ language }}</option>
-        {% endfor %}
-    </select>
-    <label for="is_remote">Можно удаленно</label>
-    <input type="checkbox" id="is_remote" name="is_remote" value="True">
-    <label for="salary_from">Зарплата от</label>
-    <input type="number" id="salary_from" name="salary_from">
+<form action="/vacancies/" method="get" class="search-form">
 
-    <button type="submit">Искать</button>
+    <div class="form-wrapper">
+
+        <div class="mb-2">
+            <select class='form-select' name="speciality">
+                <option value=''>Специализация</option>
+                {% for speciality in form.specialities %}
+                {{ speciality }}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <select class='form-select' name="language">
+                <option value=''>Язык</option>
+                {% for language in form.languages %}
+                {{ language }}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <select class='form-select' name="grade">
+                <option value=''>Уровень</option>
+                {% for grade in form.grades %}
+                {{ grade }}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <select class='form-select' name="experience">
+                <option value=''>Опыт</option>
+                {% for experience in form.experiences %}
+                {{ experience }}
+                {% endfor %}
+            </select>
+        </div>
+
+
+        <div class="mb-2">
+            <select class='form-select' name="location">
+                <option value=''>Локация</option>
+                {% for city in form.cities %}
+                {{ city }}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-2 form-check" style="padding-left: 0;">
+            <div class="remote-section">
+                {{ form.is_remote }}
+                <label class="form-check-label" for="id_is_remote">Можно удаленно</label>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            {{ form.salary_from }}
+        </div>
+
+        <div class="mb-2">
+            <button class="btn btn-success" type="submit" style="width: 100%">Искать</button>
+        </div>
+
+        {% if result %}
+            Найдено вакансий: {{ result }}
+        {% endif %}
+
+    </div>
+
 </form>
-
