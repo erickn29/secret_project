@@ -68,7 +68,7 @@ class HabrParser(BaseParser):
                         'stack': stack,
                         'company': company.group(0)[1: -1],
                         'company_address': company_address[0] if company_address else None,
-                        'date': datetime.datetime.now().strftime('%Y-%m-%d'),
+                        'date': datetime.datetime.now(),
                         'link': vacancy['link']
                     })
             return vacancies_dict

@@ -16,18 +16,21 @@ LEFT-MENU
 
 {% block main-content %}
 
-<div id="container-langs" style="width:100%; height:400px;">
+<div id="container-langs">
     <input type="hidden" id="langs" value="{{ langs }}">
     <canvas id="langs-chart"></canvas>
     <script>
         const languageDynamicChart = document.getElementById('langs-chart');
         const languageData = JSON.parse(document.getElementById('langs').value)
-
+        console.log(Object.keys(Object.values(languageData)[0]))
+        console.log(languageData)
         let languageDates = Object.keys(languageData)
+
         let python_ = []
         let javaScript_ = []
         let csharp_ = []
         let php_ = []
+        
         let data_sets = []
 
         for (let i = 0; i < languageDates.length; i++) {
@@ -44,40 +47,44 @@ LEFT-MENU
             innerName: 'Python',
             tension: 0.3,
             fill: true,
-            backgroundColor: '#4cceac',
+            backgroundColor: '#4cceac99',
             label: 'Python',
             data: python_,
             borderWidth: 1,
+            borderColor: '#4cceac',
             pointStyle: false
         }
         const javaScriptDataSet = {
             innerName: 'JavaScript',
             tension: 0.3,
             fill: true,
-            backgroundColor: '#ff6f59',
+            backgroundColor: '#ff6f5999',
             label: 'JavaScript',
             data: javaScript_,
             borderWidth: 1,
+            borderColor: '#ff6f59',
             pointStyle: false
         }
         const phpDataSet = {
             innerName: 'php',
             tension: 0.3,
             fill: true,
-            backgroundColor: '#007bff',
+            backgroundColor: '#007bff99',
             label: 'PHP',
             data: php_,
             borderWidth: 1,
+            borderColor: '#007bff',
             pointStyle: false
         }
         const csharpDataSet = {
             innerName: 'Csharp',
             tension: 0.3,
             fill: true,
-            backgroundColor: '#6f42c1',
+            backgroundColor: '#6f42c199',
             label: 'C#',
             data: csharp_,
             borderWidth: 1,
+            borderColor: '#6f42c1',
             pointStyle: false
         }
 
@@ -125,72 +132,70 @@ LEFT-MENU
             }
         });
     </script>
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let data = JSON.parse(document.getElementById("langs").value)
-            let data_values = Object.values(data)
-            let date = new Date(Object.keys(data)[0])
-            var start_date = date.getTime()
-            let python = []
-            let js = []
-            let cs = []
-            let php = []
-            for (let i = 0; i < data_values.length; i++) {
-                python.push(data_values[i].Python)
-                js.push(data_values[i].JavaScript)
-                cs.push(data_values[i].Csharp)
-                php.push(data_values[i].php)
+</div>
+<div id="container-profs">
+    <canvas id="profs-chart"></canvas>
+    <input type="hidden" id="profs" value="{{ profs }}">
+    <script>
+        const profsDynamicChart = document.getElementById('profs-chart');
+        
+        let colors = ['#4cceac99', '#6f42c199', '#007bff99', '#ff6f5999']
+        let data = JSON.parse($('#profs').val())
+        let profs_data_sets = []
+        let color_index = 0
+        for (let i = 0; i < data.profs.length; i++){
+            if (color_index >= colors.length - 1){
+                color_index = 0
+            } else {
+                color_index += 1
             }
-            Highcharts.stockChart('container-langs', {
-                rangeSelector: {
-                    selected: 1
+            console.log(color_index)
+            profs_data_sets.push(
+                {
+                    tension: 0.3,
+                    fill: true,
+                    backgroundColor: colors[color_index],
+                    label: Object.keys(data.profs[i])[0],
+                    data: data.profs[i][Object.keys(data.profs[i])[0]],
+                    borderWidth: 1,
+                    pointStyle: false
+                }
+            )
+        }
+        let profsChart = new Chart(profsDynamicChart, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: profs_data_sets,
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Динамика востребованности профессий на основе статистики открытых вакансий'
+                    },
                 },
-
-                title: {
-                    text: 'Количество новых вакансий в разрезе языков программирования'
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
                 },
-
-                series: [
-                    {
-                        name: 'Python',
-                        pointStart: start_date,
-                        pointInterval: 86400 * 1000,
-                        data: python,
-                        tooltip: {
-                            // valueDecimals: 0
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
                         }
                     },
-                    {
-                        name: 'JavaScript',
-                        pointStart: start_date,
-                        pointInterval: 86400 * 1000,
-                        data: js,
-                        tooltip: {
-                            // valueDecimals: 0
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
                         }
                     },
-                    {
-                        name: 'C#',
-                        pointStart: start_date,
-                        pointInterval: 86400 * 1000,
-                        data: cs,
-                        tooltip: {
-                            // valueDecimals: 0
-                        }
-                    },
-                    {
-                        name: 'PHP',
-                        pointStart: start_date,
-                        pointInterval: 86400 * 1000,
-                        data: php,
-                        tooltip: {
-                            // valueDecimals: 0
-                        }
-                    },
-                ]
-            });
+                }
+            }
         });
-    </script> -->
+    </script>
 </div>
 
 {% endblock %}

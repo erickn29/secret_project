@@ -1,5 +1,7 @@
+from datetime import datetime, timedelta
+
 from django.db import models
-from django.db.models import DO_NOTHING, UniqueConstraint
+from django.db.models import DO_NOTHING, UniqueConstraint, Q
 
 
 class StackTools(models.Model):
@@ -26,6 +28,18 @@ class Company(models.Model):
         return f'{self.name} / Город: {self.city}'
 
 
+class CustomManager(models.Manager):
+    def get_actual_vacancies(self):
+        start_date = datetime.now().date() - timedelta(days=30)
+        end_date = datetime.now().date()
+        return self.filter(
+            Q(date__range=[start_date, end_date]) &
+            Q(
+                Q(salary_from__isnull=False) | Q(salary_to__isnull=False)
+            )
+        )
+
+
 class Vacancy(models.Model):
     title = models.CharField(max_length=128)
     text = models.TextField()
@@ -42,11 +56,11 @@ class Vacancy(models.Model):
     date = models.DateField(auto_now=True)
     update = models.DateField(null=True)
 
+    objects = CustomManager()
+
     class Meta:
-        indexes = [
-            models.Index(fields=['salary_from', 'salary_to', 'speciality', 'date']),
-        ]
-        UniqueConstraint(fields=['title', 'text', 'salary_from', 'salary_to', ], name='unique_vacancy')
+        indexes = [models.Index(fields=['salary_from', 'salary_to', 'speciality', 'date']), ]
+        unique_together = ('title', 'salary_from', 'salary_to', 'company')
 
     def __str__(self):
         return self.title

@@ -37,7 +37,13 @@ class VacanciesList(ListView):
         start_date = datetime.now().date() - timedelta(days=30)
         end_date = datetime.now().date()
         queryset = super().get_queryset()
-        queryset = queryset.filter(date__range=[start_date, end_date]).order_by('-date')
+        queryset = queryset.filter(
+            Q(date__range=[start_date, end_date]) &
+            (
+                Q(salary_from__isnull=False) |
+                Q(salary_to__isnull=False)
+            )
+        ).order_by('-date')
         if len(self.request.GET) > 0:
             data = self.request.GET
             if data.get('language'):
@@ -117,5 +123,3 @@ class VacancyDetail(DetailView):
     #
     # def get(self, request, *args, **kwargs):
     #     pass
-
-

@@ -94,7 +94,7 @@ class HhParser(BaseParser):
                 company = None
                 company_address = None
                 is_remote = False
-                if 'руб' in salary:
+                if 'руб' in salary or '₽' in salary:
                     if 'от' in salary and 'до' not in salary:
                         salary_from = int(''.join([i for i in salary if i.isdigit()]))
                     if 'до' in salary and 'от' not in salary:

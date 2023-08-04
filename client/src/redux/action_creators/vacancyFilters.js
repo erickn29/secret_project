@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { FILTER_CITIES, FILTER_EXPIRIENCES, FILTER_GRADES, FILTER_SPECIALITIES, FILTER_STACKTOOLS, FILTER_VALUES_ERROR } from "../types";
-import { FILTER_LIST_CITIES_API_URL, FILTER_LIST_EXPERIENCES_API_URL, FILTER_LIST_GRADES_API_URL, FILTER_LIST_SPECIALITIES_API_URL, FILTER_LIST_STACKTOOLS_API_URL } from '../../utils/backend_api_urls';
+import { FILTER_CITIES, FILTER_EXPIRIENCES, FILTER_GRADES, FILTER_SPECIALITIES, FILTER_VALUES_ERROR } from "../types";
+import { FILTER_LIST_CITIES_API_URL, FILTER_LIST_EXPERIENCES_API_URL, FILTER_LIST_GRADES_API_URL, FILTER_LIST_SPECIALITIES_API_URL } from '../../utils/backend_api_urls';
 
 export const fetchFilterValues = () => {
   return async (dispatch) => {
@@ -30,12 +30,12 @@ export const fetchFilterValues = () => {
         payload: responseSpecialities.data.result,
       });
 
-      let responseStacktools = await axios.get(FILTER_LIST_STACKTOOLS_API_URL);
+      // let responseStacktools = await axios.get(FILTER_LIST_STACKTOOLS_API_URL);
       
-      dispatch({type: FILTER_STACKTOOLS, 
-        payload: responseStacktools.data.results,
+      // dispatch({type: FILTER_STACKTOOLS, 
+      //   payload: responseStacktools.data.results,
         
-      });
+      // });
     } catch(e) {
       dispatch({type: FILTER_VALUES_ERROR, 
           payload: e.name,
